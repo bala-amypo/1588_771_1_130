@@ -11,4 +11,5 @@ public class DeviceOwnershipRecord {
     private LocalDate warrantyExpiration;
     private Boolean active;
     
+    
 }

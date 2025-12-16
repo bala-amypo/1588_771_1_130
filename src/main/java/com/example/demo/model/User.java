@@ -22,14 +22,17 @@ public class User {
     public long getId(){
         return id;
     }
-    public String email() {
+    public String getEmail() {
         return email;
     }
-    public String password() {
+    public String getPassword() {
         return password;
     }
     public String getRoles() {
         return roles;
+    }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
     public void setId(long id) {
         this.id=id;
@@ -43,7 +46,10 @@ public class User {
     public void Password(String password) {
         this.password=password;
     }
-    public void setRole(String role) {
+    public void setRoles(String roles) {
         this.roles=roles;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt=createdAt;
     }
 }
