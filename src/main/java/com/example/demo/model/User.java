@@ -28,7 +28,22 @@ public class User {
     public String password() {
         return password;
     }
-    public String roles() {
-        return 
+    public String getRoles() {
+        return roles;
+    }
+    public void setId(long id) {
+        this.id=id;
+    }
+    public void setName(String name) {
+        this.name=name;
+    }
+    public void setEmail(String email) {
+        this.email=email;
+    }
+    public void Password(String password) {
+        this.password=password;
+    }
+    public void setRole(String role) {
+        this.roles=roles;
     }
 }
