@@ -12,5 +12,23 @@ public class User {
     
     public User() {}
 
-    
+    public User(String name,String email,String password,String roles,LocalDateTime createdAt) {
+        this.name=name;
+        this.email=email;
+        this.password=password;
+        this.roles=roles;
+        this.createdAt=createdAt;
+    }
+    public long getId(){
+        return id;
+    }
+    public String email() {
+        return email;
+    }
+    public String password() {
+        return password;
+    }
+    public String roles() {
+        return 
+    }
 }
