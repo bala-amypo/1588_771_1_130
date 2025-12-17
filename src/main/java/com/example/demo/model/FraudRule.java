@@ -1,50 +1,19 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "ruleCode"))
 public class FraudRule {
-    private long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String ruleCode;
     private String description;
     private String ruleType;
-    private Boolean active;
+    private Boolean active = true;
 
-    public FraudRule() {}
-
-    public FraudRule(String ruleCode,String description,String ruleType,Boolean active) {
-        this.ruleCode=ruleCode;
-        this.description=description;
-        this.ruleType=ruleType;
-        this.active=active;
-    }
-
-    public String getRuleCode() {
-        return ruleCode;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getRuleType() {
-        return ruleType;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setRuleCode(String ruleCode) {
-        this.ruleCode = ruleCode;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setRuleType(String ruleType) {
-        this.ruleType = ruleType;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
+    // getters & setters
 }
