@@ -13,7 +13,7 @@ import com.example.demo.dto.RegisterRequest;
 import com.example.demo.service.UserService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
     @Autowired
     private UserService userService;
