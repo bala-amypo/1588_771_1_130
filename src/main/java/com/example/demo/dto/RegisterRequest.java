@@ -4,7 +4,7 @@ public class RegisterRequest {
     private String username;
     private String password;
     private String email;
-    private S
+    private String roles;
     
     public String getUsername() {
         return username;
@@ -12,6 +12,7 @@ public class RegisterRequest {
     public String getPassword() {
         return password;
     }
+    
     public void setUsername(String username) {
         this.username = username;
     }
