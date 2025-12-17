@@ -1,10 +1,20 @@
-package com.example.demo.service;
+@Service
+public class UserService {
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
+    private final UserRepository repo;
+    private final PasswordEncoder encoder;
 
-public interface UserService {
-    String registerUser(RegisterRequest request);
-    AuthResponse loginUser(AuthRequest request);
+    public UserService(UserRepository repo, PasswordEncoder encoder) {
+        this.repo = repo;
+        this.encoder = encoder;
+    }
+
+    public User register(User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        return repo.save(user);
+    }
+
+    public List<User> getAll() {
+        return repo.findAll();
+    }
 }
