@@ -1,12 +1,20 @@
+package com.example.demo.service;
+
+import com.example.demo.model.DeviceOwnershipRecord;
+import com.example.demo.repository.DeviceOwnershipRecordRepository;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
 @Service
-public class DeviceOwnershipRecordService {
+public class DeviceOwnershipService {
 
     @Autowired
     private DeviceOwnershipRecordRepository repo;
 
     public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord device) {
-        if (repo.findBySerialNumber(device.getSerialNumber()).isPresent())
-            throw new RuntimeException("Duplicate serial number");
         return repo.save(device);
     }
 
