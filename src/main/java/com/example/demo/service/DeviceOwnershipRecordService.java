@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.repository.DeviceOwnershipRecordRepository;
+import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +22,7 @@ public class DeviceOwnershipRecordService {
 
     public DeviceOwnershipRecord getById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("DeviceOwnershipRecord not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Device not found"));
     }
 
     public List<DeviceOwnershipRecord> getAll() {
