@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.DeviceOwnershipRecord;
-import com.example.demo.service.DeviceOwnershipRecordService;
+import com.example.demo.service.DeviceOwnershipService;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/devices")
-public class DeviceOwnershipRecordController {
+public class DeviceOwnershipController {
 
     @Autowired
     private DeviceOwnershipService service;
