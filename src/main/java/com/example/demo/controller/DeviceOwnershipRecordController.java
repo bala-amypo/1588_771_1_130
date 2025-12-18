@@ -1,38 +1,17 @@
-package com.example.demo.controller;
-
-import com.example.demo.model.DeviceOwnershipRecord;
-import com.example.demo.service.DeviceOwnershipRecordService;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/device-ownerships")
-public class DeviceOwnershipRecordController {
+@RequestMapping("/api/devices")
+public class DeviceOwnershipController {
 
-    private final DeviceOwnershipRecordService service;
-
-    public DeviceOwnershipRecordController(DeviceOwnershipRecordService service) {
-        this.service = service;
-    }
+    @Autowired
+    private DeviceOwnershipService service;
 
     @PostMapping
-    public DeviceOwnershipRecord create(@RequestBody DeviceOwnershipRecord record) {
-        return service.create(record);
-    }
-
-    @GetMapping("/{id}")
-    public DeviceOwnershipRecord getById(@PathVariable Long id) {
-        return service.getById(id);
+    public DeviceOwnershipRecord register(@RequestBody DeviceOwnershipRecord d) {
+        return service.registerDevice(d);
     }
 
     @GetMapping
-    public List<DeviceOwnershipRecord> getAll() {
-        return service.getAll();
-    }
-
-    @PutMapping("/{id}")
-    public DeviceOwnershipRecord deactivate(@PathVariable Long id) {
-        return service.deactivate(id);
+    public List<DeviceOwnershipRecord> all() {
+        return service.getAllDevices();
     }
 }

@@ -1,37 +1,26 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "device_ownership_records")
+@Table(name = "device_ownership",
+       uniqueConstraints = @UniqueConstraint(columnNames = "serialNumber"))
 public class DeviceOwnershipRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String serialNumber;
 
-    private boolean active;
+    private String ownerName;
+    private String ownerEmail;
+    private LocalDate purchaseDate;
+    private LocalDate warrantyExpiration;
 
-    public Long getId() {
-        return id;
-    }
+    private Boolean active = true;
 
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+    // getters & setters
 }
