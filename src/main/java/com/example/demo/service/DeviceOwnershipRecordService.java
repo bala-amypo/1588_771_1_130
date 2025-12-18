@@ -23,7 +23,7 @@ public class DeviceOwnershipRecordService {
     public DeviceOwnershipRecord getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("DeviceOwnershipRecord not found"));
+                        new ResourceNotFoundException("Device ownership record not found: " + id));
     }
 
     public List<DeviceOwnershipRecord> getAll() {
