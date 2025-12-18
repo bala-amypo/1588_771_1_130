@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.DeviceOwnershipRecord;
-import com.example.demo.service.DeviceOwnershipService;
+import com.example.demo.service.DeviceOwnershipRecordService;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;

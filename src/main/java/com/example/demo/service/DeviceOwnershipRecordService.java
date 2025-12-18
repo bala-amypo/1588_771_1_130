@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.model.DeviceOwnershipRecord;
+import com.example.demo.model.DeviceOwnershipRecordRecord;
 import com.example.demo.repository.DeviceOwnershipRecordRepository;
 
 import org.springframework.stereotype.Service;
