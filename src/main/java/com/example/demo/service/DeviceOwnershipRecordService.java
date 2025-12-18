@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.repository.DeviceOwnershipRecordRepository;
 import org.springframework.stereotype.Service;
@@ -7,35 +8,31 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class DeviceOwnershipService {
+public class DeviceOwnershipRecordService {
 
     private final DeviceOwnershipRecordRepository repository;
 
-    public DeviceOwnershipService(DeviceOwnershipRecordRepository repository) {
+    public DeviceOwnershipRecordService(DeviceOwnershipRecordRepository repository) {
         this.repository = repository;
     }
 
-    public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord device) {
-        repository.findBySerialNumber(device.getSerialNumber())
-                .ifPresent(d -> {
-                    throw new RuntimeException("Serial number already exists");
-                });
-        return repository.save(device);
-    }
-
-    public DeviceOwnershipRecord getBySerial(String serial) {
-        return repository.findBySerialNumber(serial)
-                .orElseThrow(() -> new RuntimeException("Device not found"));
+    public DeviceOwnershipRecord create(DeviceOwnershipRecord record) {
+        return repository.save(record);
     }
 
     public DeviceOwnershipRecord getById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Device not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("DeviceOwnershipRecord not found"));
     }
 
-    public List<DeviceOwnershipRecord> getAllDevices() {
+    public List<DeviceOwnershipRecord> getAll() {
         return repository.findAll();
     }
 
-    public DeviceOwnershipRecord updateStatus(Long id, boolean active) {
-        DeviceOwner
+    public DeviceOwnershipRecord deactivate(Long id) {
+        DeviceOwnershipRecord record = getById(id);
+        record.setActive(false);
+        return repository.save(record);
+    }
+}

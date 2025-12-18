@@ -1,44 +1,38 @@
-package com.example.demo.controller;
+package com.example.demo.service;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.DeviceOwnershipRecord;
-import com.example.demo.service.DeviceOwnershipService;
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.repository.DeviceOwnershipRecordRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/devices")
-public class DeviceOwnershipController {
+@Service
+public class DeviceOwnershipRecordService {
 
-    private final DeviceOwnershipService service;
+    private final DeviceOwnershipRecordRepository repository;
 
-    public DeviceOwnershipController(DeviceOwnershipService service) {
-        this.service = service;
+    public DeviceOwnershipRecordService(DeviceOwnershipRecordRepository repository) {
+        this.repository = repository;
     }
 
-    @PostMapping
-    public DeviceOwnershipRecord register(@RequestBody DeviceOwnershipRecord device) {
-        return service.registerDevice(device);
+    public DeviceOwnershipRecord create(DeviceOwnershipRecord record) {
+        return repository.save(record);
     }
 
-    @PutMapping("/{id}/status")
-    public DeviceOwnershipRecord updateStatus(@PathVariable Long id,
-                                              @RequestParam boolean active) {
-        return service.updateStatus(id, active);
+    public DeviceOwnershipRecord getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("DeviceOwnershipRecord not found"));
     }
 
-    @GetMapping("/serial/{serialNumber}")
-    public DeviceOwnershipRecord getBySerial(@PathVariable String serialNumber) {
-        return service.getBySerial(serialNumber);
-    }
-
-    @GetMapping("/{id}")
-    public DeviceOwnershipRecord getById(@PathVariable Long id) {
-        return service.getById(id);
-    }
-
-    @GetMapping
     public List<DeviceOwnershipRecord> getAll() {
-        return service.getAllDevices();
+        return repository.findAll();
+    }
+
+    public DeviceOwnershipRecord deactivate(Long id) {
+        DeviceOwnershipRecord record = getById(id);
+        record.setActive(false);
+        return repository.save(record);
     }
 }
