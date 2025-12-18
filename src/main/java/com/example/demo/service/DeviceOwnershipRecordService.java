@@ -1,5 +1,5 @@
 @Service
-public class DeviceOwnershipService {
+public class DeviceOwnershipRecordService {
 
     @Autowired
     private DeviceOwnershipRecordRepository repo;
