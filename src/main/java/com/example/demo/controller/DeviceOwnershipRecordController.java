@@ -1,17 +1,27 @@
+package com.example.demo.controller;
+
+import com.example.demo.model.DeviceOwnershipRecord;
+import com.example.demo.service.DeviceOwnershipService;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/devices")
-public class DeviceOwnershipRecordController {
+public class DeviceOwnershipController {
 
     @Autowired
-    private DeviceOwnershipRecordService service;
+    private DeviceOwnershipService service;
 
     @PostMapping
-    public DeviceOwnershipRecord register(@RequestBody DeviceOwnershipRecord d) {
-        return service.registerDevice(d);
+    public DeviceOwnershipRecord register(@RequestBody DeviceOwnershipRecord device) {
+        return service.registerDevice(device);
     }
 
     @GetMapping
-    public List<DeviceOwnershipRecord> all() {
+    public List<DeviceOwnershipRecord> getAll() {
         return service.getAllDevices();
     }
 }
