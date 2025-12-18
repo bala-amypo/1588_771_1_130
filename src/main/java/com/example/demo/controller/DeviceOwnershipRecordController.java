@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/devices")
-public class DeviceOwnershipController {
+public class DeviceOwnershipRecordController {
 
     @Autowired
     private DeviceOwnershipService service;
