@@ -1,25 +1,25 @@
-package com.example.demo.model;
+// package com.example.demo.model;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Set;
+// import jakarta.persistence.*;
+// import java.time.LocalDateTime;
+// import java.util.Set;
 
-@Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class User {
+// @Entity
+// @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+// public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//     @Id
+//     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//     private Long id;
 
-    private String name;
-    private String email;
-    private String password;
+//     private String name;
+//     private String email;
+//     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> roles;
+//     @ElementCollection(fetch = FetchType.EAGER)
+//     private Set<String> roles;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+//     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // getters & setters
-}
+//     // getters & setters
+// }

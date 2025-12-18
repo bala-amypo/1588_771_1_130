@@ -1,1 +1,1 @@
-public record RegisterRequest(String name, String email, String password, Set<String> roles) {}
+// public record RegisterRequest(String name, String email, String password, Set<String> roles) {}

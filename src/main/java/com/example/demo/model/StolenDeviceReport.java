@@ -1,19 +1,19 @@
-package com.example.demo.model;
+// package com.example.demo.model;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+// import jakarta.persistence.*;
+// import java.time.LocalDateTime;
 
-@Entity
-public class StolenDeviceReport {
+// @Entity
+// public class StolenDeviceReport {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//     @Id
+//     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//     private Long id;
 
-    private String serialNumber;
-    private String reportedBy;
-    private LocalDateTime reportDate = LocalDateTime.now();
-    private String details;
+//     private String serialNumber;
+//     private String reportedBy;
+//     private LocalDateTime reportDate = LocalDateTime.now();
+//     private String details;
 
-    // getters & setters
-}
+//     // getters & setters
+// }
