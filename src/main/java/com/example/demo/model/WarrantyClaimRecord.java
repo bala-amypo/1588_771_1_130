@@ -26,7 +26,7 @@ public class WarrantyClaimRecord {
     private String status = "PENDING";
 
     private LocalDateTime submittedAt;
-
+ 
 
     @ManyToOne
     @JoinColumn(name = "device_id")
