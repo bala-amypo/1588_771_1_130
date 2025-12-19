@@ -3,16 +3,19 @@ package com.example.demo.service;
 import com.example.demo.model.FraudAlertRecord;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FraudAlertService {
 
-    FraudAlertRecord createAlert(FraudAlertRecord alert);
+    FraudAlertRecord create(FraudAlertRecord alert);
 
-    FraudAlertRecord resolveAlert(Long id);
+    FraudAlertRecord resolve(Long id);
+
+    Optional<FraudAlertRecord> getById(Long id);
 
     List<FraudAlertRecord> getAlertsBySerial(String serialNumber);
 
     List<FraudAlertRecord> getAlertsByClaim(Long claimId);
 
-    List<FraudAlertRecord> getAllAlerts();
+    List<FraudAlertRecord> getAll();
 }
