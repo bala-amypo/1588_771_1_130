@@ -4,34 +4,27 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "fraud_rules")
 public class FraudRule {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, unique = true)
     private String ruleCode;
-
-    @Column(nullable = false)
-    private String ruleType;
-
     private String description;
+    private boolean active;
+    private LocalDateTime createdAt;
 
-    private Boolean active = true;
- 
-    public FraudRule() {}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public FraudRule(String ruleCode, String ruleType) {
-        this.ruleCode = ruleCode;
-        this.ruleType = ruleType;
-    }
+    public String getRuleCode() { return ruleCode; }
+    public void setRuleCode(String ruleCode) { this.ruleCode = ruleCode; }
 
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    // getters and setters
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
