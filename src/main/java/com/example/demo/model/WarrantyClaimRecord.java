@@ -27,7 +27,6 @@ public class WarrantyClaimRecord {
 
     private LocalDateTime submittedAt;
 
-    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "device_id")
