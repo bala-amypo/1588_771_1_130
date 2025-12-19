@@ -1,28 +1,54 @@
-// package com.example.demo.model;
+package com.example.demo.model;
 
-// import jakarta.persistence.*;
-// import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
-// @Entity
-// public class WarrantyClaimRecord {
+@Entity
+@Table(name = "warranty_claim_records")
+public class WarrantyClaimRecord {
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//     private String serialNumber;
-//     private String claimantName;
-//     private String claimantEmail;
-//     private String claimReason;
+    @Column(nullable = false)
+    private String serialNumber;
 
-//     private String status = "PENDING";
+    @Column(nullable = false)
+    private String claimantName;
 
-//     private LocalDateTime submittedAt;
+    private String claimantEmail;
 
-//     @PrePersist
-//     public void onCreate() {
-//         this.submittedAt = LocalDateTime.now();
-//     }
+    @Column(nullable = false)
+    private String claimReason;
 
-//     // getters & setters
-// }
+    private String status = "PENDING";
+
+    private LocalDateTime submittedAt;
+
+    private LocalDateTime createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "device_id")
+    private DeviceOwnershipRecord device;
+
+    @OneToMany(mappedBy = "claim", cascade = CascadeType.ALL)
+    private List<FraudAlertRecord> alerts;
+
+    public WarrantyClaimRecord() {}
+
+    public WarrantyClaimRecord(String serialNumber, String claimantName, String claimReason) {
+        this.serialNumber = serialNumber;
+        this.claimantName = claimantName;
+        this.claimReason = claimReason;
+    }
+
+    @PrePersist
+    public void onCreate() {
+        this.submittedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+    }
+
+    // getters and setters
+}

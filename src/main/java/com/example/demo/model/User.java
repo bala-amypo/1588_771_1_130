@@ -1,25 +1,46 @@
-// package com.example.demo.model;
+package com.example.demo.model;
 
-// import jakarta.persistence.*;
-// import java.time.LocalDateTime;
-// import java.util.Set;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Set;
 
-// @Entity
-// @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-// public class User {
+@Entity
+@Table(name = "users")
+public class User {
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//     private String name;
-//     private String email;
-//     private String password;
+    @Column(nullable = false)
+    private String name;
 
-//     @ElementCollection(fetch = FetchType.EAGER)
-//     private Set<String> roles;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-//     private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(nullable = false)
+    private String password;
 
-//     // getters & setters
-// }
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<String> roles;
+
+    private LocalDateTime createdAt;
+
+    public User() {}
+
+    public User(String name, String email, String password, Set<String> roles) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    // getters and setters
+}

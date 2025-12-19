@@ -1,23 +1,55 @@
-// package com.example.demo.model;
+package com.example.demo.model;
 
-// import jakarta.persistence.*;
-// import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-// @Entity
-// public class FraudAlertRecord {
+@Entity
+@Table(name = "fraud_alert_records")
+public class FraudAlertRecord {
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//     private Long claimId;
-//     private String serialNumber;
-//     private String alertType;
-//     private String severity;
-//     private String message;
+    @Column(nullable = false)
+    private Long claimId;
 
-//     private Boolean resolved = false;
-//     private LocalDateTime alertDate = LocalDateTime.now();
+    @Column(nullable = false)
+    private String serialNumber;
 
-//     // getters & setters
-// }
+    @Column(nullable = false)
+    private String alertType;
+
+    @Column(nullable = false)
+    private String severity;
+
+    private String message;
+
+    private Boolean resolved = false;
+
+    private LocalDateTime alertDate;
+
+    @ManyToOne
+    @JoinColumn(name = "claim_ref_id")
+    private WarrantyClaimRecord claim;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public FraudAlertRecord() {}
+
+    public FraudAlertRecord(Long claimId, String serialNumber, String alertType, String severity) {
+        this.claimId = claimId;
+        this.serialNumber = serialNumber;
+        this.alertType = alertType;
+        this.severity = severity;
+    }
+
+    @PrePersist
+    public void onCreate() {
+        this.alertDate = LocalDateTime.now();
+    }
+
+    // getters and setters
+}
