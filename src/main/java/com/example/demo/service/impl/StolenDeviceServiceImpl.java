@@ -23,18 +23,17 @@ public class StolenDeviceServiceImpl implements StolenDeviceService {
     }
 
     @Override
-    public List<StolenDeviceReport> getBySerial(String serial) {
-        return repository.findBySerialNumber(serial);
+    public Optional<StolenDeviceReport> getById(Long id) {
+        return repository.findById(id);
     }
 
     @Override
-    public StolenDeviceReport getReportById(Long id) {
-        Optional<StolenDeviceReport> report = repository.findById(id);
-        return report.orElse(null); // or throw custom exception if preferred
+    public List<StolenDeviceReport> getBySerialNumber(String serialNumber) {
+        return repository.findBySerialNumber(serialNumber);
     }
 
     @Override
-    public List<StolenDeviceReport> getAllReports() {
+    public List<StolenDeviceReport> getAll() {
         return repository.findAll();
     }
 }
