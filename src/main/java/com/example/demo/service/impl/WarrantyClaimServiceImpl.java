@@ -1,38 +1,39 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.model.WarrantyClaimRecord;
+import com.example.demo.repository.WarrantyClaimRecordRepository;
+import com.example.demo.service.WarrantyClaimService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class WarrantyClaimServiceImpl implements WarrantyClaimService {
 
-    private final WarrantyClaimRecordRepository repository;
+    private final WarrantyClaimRecordRepository repo;
 
-    public WarrantyClaimServiceImpl(WarrantyClaimRecordRepository repository) {
-        this.repository = repository;
+    public WarrantyClaimServiceImpl(WarrantyClaimRecordRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public WarrantyClaimRecord submit(WarrantyClaimRecord claim) {
-        claim.setStatus("SUBMITTED");
-        return repository.save(claim);
+    public WarrantyClaimRecord create(WarrantyClaimRecord record) {
+        return repo.save(record);
+    }
+
+    @Override
+    public WarrantyClaimRecord getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Claim not found"));
+    }
+
+    @Override
+    public List<WarrantyClaimRecord> getBySerial(String serial) {
+        return repo.findBySerial(serial);
     }
 
     @Override
     public List<WarrantyClaimRecord> getAll() {
-        return repository.findAll();
-    }
-
-    @Override
-    public Optional<WarrantyClaimRecord> getById(Long id) {
-        return repository.findById(id);
-    }
-
-    @Override
-    public List<WarrantyClaimRecord> getBySerialNumber(String serialNumber) {
-        return repository.findBySerialNumber(serialNumber);
-    }
-
-    @Override
-    public WarrantyClaimRecord updateStatus(Long id, String status) {
-        WarrantyClaimRecord claim = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Claim not found"));
-        claim.setStatus(status);
-        return repository.save(claim);
+        return repo.findAll();
     }
 }
