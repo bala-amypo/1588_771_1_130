@@ -16,7 +16,6 @@ public class WarrantyClaimServiceImpl implements WarrantyClaimService {
         this.repo = repo;
     }
 
-    // ✅ Submit warranty claim
     @Override
     public WarrantyClaimRecord submitClaim(WarrantyClaimRecord claim) {
         return repo.save(claim);
