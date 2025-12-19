@@ -21,7 +21,12 @@ public class DeviceOwnershipController {
         return service.registerDevice(device);
     }
 
-    @GetMapping("/{serial}")
+    @GetMapping("/id/{id}")
+    public DeviceOwnershipRecord getById(@PathVariable Long id) {
+        return service.getById(id);
+    }
+
+    @GetMapping("/serial/{serial}")
     public DeviceOwnershipRecord getBySerial(@PathVariable String serial) {
         return service.getBySerial(serial);
     }
@@ -30,7 +35,7 @@ public class DeviceOwnershipController {
     public List<DeviceOwnershipRecord> getAll() {
         return service.getAll();
     }
-    
+
     @PutMapping("/{id}/status")
     public DeviceOwnershipRecord updateStatus(
             @PathVariable Long id,
