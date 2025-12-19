@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface DeviceOwnershipRepository
-        extends JpaRepository<DeviceOwnershipRecord, Long> {
+public interface DeviceOwnershipRepository extends JpaRepository<DeviceOwnershipRecord, Long> {
 
-    Optional<DeviceOwnershipRecord> findBySerial(String serial);
+    Optional<DeviceOwnershipRecord> findBySerialNumber(String serialNumber);
+
+    boolean existsBySerialNumber(String serialNumber);
 }
