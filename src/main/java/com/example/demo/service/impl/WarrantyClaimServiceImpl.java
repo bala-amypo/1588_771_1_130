@@ -16,13 +16,38 @@ public class WarrantyClaimServiceImpl implements WarrantyClaimService {
         this.repo = repo;
     }
 
+    // ✅ Submit warranty claim
     @Override
-    public WarrantyClaimRecord submit(WarrantyClaimRecord claim) {
+    public WarrantyClaimRecord submitClaim(WarrantyClaimRecord claim) {
         return repo.save(claim);
     }
 
     @Override
-    public List<WarrantyClaimRecord> getAll() {
+    public WarrantyClaimRecord updateClaimStatus(Long claimId, String status) {
+        WarrantyClaimRecord claim = repo.findById(claimId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Warranty claim not found with id: " + claimId));
+
+        claim.setStatus(status);
+        return repo.save(claim);
+    }
+
+    @Override
+    public WarrantyClaimRecord getClaimById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Warranty claim not found with id: " + id));
+    }
+
+    @Override
+    public List<WarrantyClaimRecord> getClaimsBySerial(String serialNumber) {
+        return repo.findBySerialNumber(serialNumber);
+    }
+
+    @Override
+    public List<WarrantyClaimRecord> getAllClaims() {
         return repo.findAll();
     }
 }
