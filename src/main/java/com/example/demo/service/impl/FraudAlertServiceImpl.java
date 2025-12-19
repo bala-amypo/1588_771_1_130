@@ -1,48 +1,47 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.FraudAlertRecord;
-import com.example.demo.repository.FraudAlertRecordRepository;
+import com.example.demo.repository.FraudAlertRepository;
 import com.example.demo.service.FraudAlertService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FraudAlertServiceImpl implements FraudAlertService {
 
-    private final FraudAlertRecordRepository repository;
+    private final FraudAlertRepository repo;
 
-    public FraudAlertServiceImpl(FraudAlertRecordRepository repository) {
-        this.repository = repository;
+    public FraudAlertServiceImpl(FraudAlertRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public FraudAlertRecord create(FraudAlertRecord alert) {
+    public FraudAlertRecord createAlert(FraudAlertRecord alert) {
         alert.setResolved(false);
-        return repository.save(alert);
+        return repo.save(alert);
     }
 
     @Override
-    public FraudAlertRecord resolve(Long id) {
-        FraudAlertRecord alert = repository.findById(id)
+    public FraudAlertRecord resolveAlert(Long id) {
+        FraudAlertRecord alert = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Alert not found"));
         alert.setResolved(true);
-        return repository.save(alert);
+        return repo.save(alert);
     }
 
     @Override
-    public Optional<FraudAlertRecord> getById(Long id) {
-        return repository.findById(id);
+    public List<FraudAlertRecord> getAlertsBySerial(String serialNumber) {
+        return repo.findBySerialNumber(serialNumber);
     }
 
     @Override
-    public List<FraudAlertRecord> getBySerialNumber(String serialNumber) {
-        return repository.findBySerialNumber(serialNumber);
+    public List<FraudAlertRecord> getAlertsByClaim(Long claimId) {
+        return repo.findByClaimId(claimId);
     }
 
     @Override
-    public List<FraudAlertRecord> getAll() {
-        return repository.findAll();
+    public List<FraudAlertRecord> getAllAlerts() {
+        return repo.findAll();
     }
 }
