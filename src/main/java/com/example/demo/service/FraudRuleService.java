@@ -1,33 +1,10 @@
-// @Service
-// public class FraudRuleService {
+package com.example.demo.service;
 
-//     private final FraudRuleRepository repo;
+import com.example.demo.model.FraudRule;
 
-//     public FraudRuleService(FraudRuleRepository repo) {
-//         this.repo = repo;
-//     }
+import java.util.List;
 
-//     public FraudRule createRule(FraudRule rule) {
-//         return repo.save(rule);
-//     }
-
-//     public FraudRule updateRule(Long id, FraudRule updated) {
-//         FraudRule rule = repo.findById(id).orElseThrow();
-//         rule.setDescription(updated.getDescription());
-//         rule.setRuleType(updated.getRuleType());
-//         rule.setActive(updated.getActive());
-//         return repo.save(rule);
-//     }
-
-//     public List<FraudRule> getActiveRules() {
-//         return repo.findByActiveTrue();
-//     }
-
-//     public FraudRule getById(Long id) {
-//         return repo.findById(id).orElseThrow();
-//     }
-
-//     public List<FraudRule> getAll() {
-//         return repo.findAll();
-//     }
-// }
+public interface FraudRuleService {
+    FraudRule create(FraudRule rule);
+    List<FraudRule> getActive();
+}

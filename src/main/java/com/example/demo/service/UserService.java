@@ -1,20 +1,9 @@
-// @Service
-// public class UserService {
+package com.example.demo.service;
 
-//     private final UserRepository repo;
-//     private final PasswordEncoder encoder;
+import com.example.demo.model.User;
 
-//     public UserService(UserRepository repo, PasswordEncoder encoder) {
-//         this.repo = repo;
-//         this.encoder = encoder;
-//     }
-
-//     public User register(User user) {
-//         user.setPassword(encoder.encode(user.getPassword()));
-//         return repo.save(user);
-//     }
-
-//     public List<User> getAll() {
-//         return repo.findAll();
-//     }
-// }
+public interface UserService {
+    User register(User user);
+    User login(String email, String password);
+    User getById(Long id);
+}
