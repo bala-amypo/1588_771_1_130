@@ -1,8 +1,8 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.repository.DeviceOwnershipRecordRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.service.DeviceOwnershipService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,26 +10,28 @@ import java.util.List;
 @Service
 public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
 
-    @Autowired
-    private DeviceOwnershipRecordRepository repository;
+    private final DeviceOwnershipRecordRepository repo;
+
+    public DeviceOwnershipServiceImpl(DeviceOwnershipRecordRepository repo) {
+        this.repo = repo;
+    }
 
     @Override
-    public DeviceOwnershipRecord create(DeviceOwnershipRecord record) {
+    public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord device) {
+        if (repo.existsBySerialNumber(device.getSerialNumber())) {
+            throw new IllegalArgumentException("Serial number already exists");
+        }
+        return repo.save(device);
+    }
 
-        // Duplicate check
-        repository.findBySerialNumber(record.getSerialNumber())
-                .ifPresent(existing -> {
-                    throw new IllegalArgumentException(
-                            "Device ownership already exists for serial number: "
-                                    + record.getSerialNumber()
-                    );
-                });
-
-        return repository.save(record);
+    @Override
+    public DeviceOwnershipRecord getBySerial(String serial) {
+        return repo.findBySerialNumber(serial)
+                .orElseThrow(() -> new RuntimeException("Device not found"));
     }
 
     @Override
     public List<DeviceOwnershipRecord> getAll() {
-        return repository.findAll();
+        return repo.findAll();
     }
 }

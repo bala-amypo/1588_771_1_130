@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/device-ownership")
+@RequestMapping("/api/devices")
 public class DeviceOwnershipController {
 
     private final DeviceOwnershipService service;
@@ -17,12 +17,12 @@ public class DeviceOwnershipController {
     }
 
     @PostMapping
-    public DeviceOwnershipRecord create(@RequestBody DeviceOwnershipRecord record) {
-        return service.create(record);  
+    public DeviceOwnershipRecord register(@RequestBody DeviceOwnershipRecord device) {
+        return service.registerDevice(device);
     }
 
     @GetMapping
     public List<DeviceOwnershipRecord> getAll() {
-        return service.getAll();        
+        return service.getAll();
     }
 }

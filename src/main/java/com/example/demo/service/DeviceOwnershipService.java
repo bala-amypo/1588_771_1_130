@@ -5,8 +5,7 @@ import com.example.demo.model.DeviceOwnershipRecord;
 import java.util.List;
 
 public interface DeviceOwnershipService {
-
-    DeviceOwnershipRecord create(DeviceOwnershipRecord record);
-
+    DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord device);
+    DeviceOwnershipRecord getBySerial(String serial);
     List<DeviceOwnershipRecord> getAll();
 }
