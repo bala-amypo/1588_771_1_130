@@ -8,5 +8,5 @@ import java.util.List;
 public interface StolenDeviceRecordRepository
         extends JpaRepository<StolenDeviceReport, Long> {
 
-    List<StolenDeviceReport> findBySerial(String serial);
+    List<StolenDeviceReport> findBySerialNumber(String serialNumber);
 }

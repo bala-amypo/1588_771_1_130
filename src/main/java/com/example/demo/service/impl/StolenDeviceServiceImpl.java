@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.StolenDeviceReport;
-import com.example.demo.repository.StolenDeviceRepository;
+import com.example.demo.repository.StolenDeviceRecordRepository;
 import com.example.demo.service.StolenDeviceService;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +10,9 @@ import java.util.List;
 @Service
 public class StolenDeviceServiceImpl implements StolenDeviceService {
 
-    private final StolenDeviceRepository repo;
+    private final StolenDeviceRecordRepository repo;
 
-    public StolenDeviceServiceImpl(StolenDeviceRepository repo) {
+    public StolenDeviceServiceImpl(StolenDeviceRecordRepository repo) {
         this.repo = repo;
     }
 
@@ -29,7 +29,7 @@ public class StolenDeviceServiceImpl implements StolenDeviceService {
 
     @Override
     public List<StolenDeviceReport> getBySerial(String serial) {
-        return repo.findBySerial(serial);
+        return repo.findBySerialNumber(serial);
     }
 
     @Override
