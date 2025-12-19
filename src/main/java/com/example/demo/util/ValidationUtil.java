@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public final class ValidationUtil {
 
     private ValidationUtil() {
-        // Prevent instantiation
+
     }
 
     /**
