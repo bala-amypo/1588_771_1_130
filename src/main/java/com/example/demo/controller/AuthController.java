@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserService service;
@@ -15,15 +17,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return service.register(user);
+    public User register(@RequestBody RegisterRequest req) {
+        return service.registerUser(req);
     }
 
     @PostMapping("/login")
-    public User login(
-            @RequestParam String username,
-            @RequestParam String password
-    ) {
-        return service.login(username, password);
+    public User login(@RequestBody LoginRequest req) {
+        return service.loginUser(req);
     }
 }

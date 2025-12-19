@@ -1,10 +1,11 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.repository.DeviceOwnershipRepository;
+import com.example.demo.service.DeviceOwnershipService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
@@ -16,29 +17,12 @@ public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
     }
 
     @Override
-    public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord device) {
-        return repository.save(device);
+    public DeviceOwnershipRecord getById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
-    public DeviceOwnershipRecord getBySerial(String serial) {
-        return repository.findBySerial(serial)
-                .orElseThrow(() ->
-                        new RuntimeException("Device not found with serial: " + serial));
-    }
-
-    @Override
-    public List<DeviceOwnershipRecord> getAll() {
-        return repository.findAll();
-    }
-
-    @Override
-    public DeviceOwnershipRecord updateDeviceStatus(Long id, Boolean active) {
-        DeviceOwnershipRecord device = repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Device not found with id: " + id));
-
-        device.setActive(active);
-        return repository.save(device);
+    public Optional<DeviceOwnershipRecord> getBySerial(String serial) {
+        return repository.findBySerialNumber(serial);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/claims")
+@RequestMapping("/api/warranty")
 public class WarrantyClaimController {
 
     private final WarrantyClaimService service;
@@ -16,25 +16,24 @@ public class WarrantyClaimController {
         this.service = service;
     }
 
-    @PostMapping
+    @PostMapping("/submit")
     public WarrantyClaimRecord submit(@RequestBody WarrantyClaimRecord claim) {
         return service.submit(claim);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<WarrantyClaimRecord> getAll() {
         return service.getAll();
     }
 
-
     @GetMapping("/{id}")
     public WarrantyClaimRecord getById(@PathVariable Long id) {
-        return service.getById(id);
+        return service.getById(id).orElse(null);
     }
 
-    @GetMapping("/serial/{serialNumber}")
-    public List<WarrantyClaimRecord> getBySerialNumber(@PathVariable String serialNumber) {
-        return service.getBySerialNumber(serialNumber);
+    @GetMapping("/serial/{serial}")
+    public WarrantyClaimRecord getBySerial(@PathVariable String serial) {
+        return service.getBySerialNumber(serial).orElse(null);
     }
 
     @PutMapping("/{id}/status")

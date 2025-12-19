@@ -4,10 +4,8 @@ import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.service.DeviceOwnershipService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/device-ownerships")
+@RequestMapping("/api/devices")
 public class DeviceOwnershipController {
 
     private final DeviceOwnershipService service;
@@ -16,30 +14,13 @@ public class DeviceOwnershipController {
         this.service = service;
     }
 
-    @PostMapping
-    public DeviceOwnershipRecord register(@RequestBody DeviceOwnershipRecord device) {
-        return service.registerDevice(device);
-    }
-
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public DeviceOwnershipRecord getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
     @GetMapping("/serial/{serial}")
     public DeviceOwnershipRecord getBySerial(@PathVariable String serial) {
-        return service.getBySerial(serial);
-    }
-
-    @GetMapping
-    public List<DeviceOwnershipRecord> getAll() {
-        return service.getAll();
-    }
-
-    @PutMapping("/{id}/status")
-    public DeviceOwnershipRecord updateStatus(
-            @PathVariable Long id,
-            @RequestParam Boolean active) {
-        return service.updateDeviceStatus(id, active);
+        return service.getBySerial(serial).orElse(null);
     }
 }

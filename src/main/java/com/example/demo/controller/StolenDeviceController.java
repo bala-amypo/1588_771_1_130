@@ -1,10 +1,9 @@
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+package com.example.demo.controller;
+
+import com.example.demo.model.StolenDeviceReport;
+import com.example.demo.service.StolenDeviceService;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -22,18 +21,18 @@ public class StolenDeviceController {
         return service.report(report);
     }
 
-    @GetMapping("/serial/{serialNumber}")
-    public List<StolenDeviceReport> bySerial(@PathVariable String serialNumber) {
-        return service.getBySerial(serialNumber);
-    }
-
     @GetMapping("/{id}")
-    public StolenDeviceReport byId(@PathVariable Long id) {
-        return service.getById(id);
+    public StolenDeviceReport getById(@PathVariable Long id) {
+        return service.getById(id).orElse(null);
     }
 
-    @GetMapping
-    public List<StolenDeviceReport> all() {
+    @GetMapping("/serial/{serial}")
+    public StolenDeviceReport getBySerial(@PathVariable String serial) {
+        return service.getBySerialNumber(serial).orElse(null);
+    }
+
+    @GetMapping("/all")
+    public List<StolenDeviceReport> getAll() {
         return service.getAll();
     }
 }

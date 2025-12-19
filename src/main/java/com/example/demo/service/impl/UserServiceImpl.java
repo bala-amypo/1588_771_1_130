@@ -1,12 +1,13 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,26 +20,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(RegisterRequest req) {
-
         User user = new User();
         user.setUsername(req.getUsername());
-        user.setEmail(req.getEmail());
-        user.setPassword(req.getPassword()); // plain for now
-
+        user.setPassword(req.getPassword()); // In real project, encode password!
+        user.setRoles(req.getRoles());
         return repository.save(user);
     }
 
     @Override
     public User loginUser(LoginRequest req) {
-
-        User user = repository.findByEmail(req.getEmail())
-                .orElseThrow(() ->
-                        new RuntimeException("Invalid email or password"));
-
-        if (!user.getPassword().equals(req.getPassword())) {
-            throw new RuntimeException("Invalid email or password");
+        Optional<User> userOpt = repository.findByUsername(req.getUsername());
+        if(userOpt.isPresent() && userOpt.get().getPassword().equals(req.getPassword())) {
+            return userOpt.get();
         }
-
-        return user;
+        throw new RuntimeException("Invalid credentials");
     }
 }
