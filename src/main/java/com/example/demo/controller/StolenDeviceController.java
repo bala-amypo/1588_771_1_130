@@ -36,3 +36,4 @@ public class StolenDeviceController {
         return service.getAll();
     }
 }
+    

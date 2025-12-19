@@ -16,42 +16,33 @@ public class FraudAlertController {
         this.service = service;
     }
 
-    // Create a new alert
+    // Create a new fraud alert
     @PostMapping
     public FraudAlertRecord create(@RequestBody FraudAlertRecord alert) {
-        return service.createAlert(alert);
+        return service.create(alert);
     }
 
-    // Resolve an alert by ID
-    @PutMapping("/{id}/resolve")
-    public FraudAlertRecord resolve(@PathVariable Long id) {
-        return service.resolveAlert(id);
+    // Get all fraud alerts
+    @GetMapping("/all")
+    public List<FraudAlertRecord> getAll() {
+        return service.getAll();
     }
 
-    // Get alerts by serial number
-    @GetMapping("/serial/{serialNumber}")
-    public List<FraudAlertRecord> bySerial(@PathVariable String serialNumber) {
-        return service.getAlertsBySerial(serialNumber);
-    }
-
-    // Get alerts by claim ID
-    @GetMapping("/claim/{claimId}")
-    public List<FraudAlertRecord> byClaim(@PathVariable Long claimId) {
-        return service.getAlertsByClaim(claimId);
-    }
-
-    // Get all alerts
-    @GetMapping
-    public List<FraudAlertRecord> all() {
-        return service.getAllAlerts();
-    }
-
-    // Get alert by ID
+    // Get a fraud alert by ID
     @GetMapping("/{id}")
     public FraudAlertRecord getById(@PathVariable Long id) {
-        return service.getAllAlerts().stream()
-                      .filter(alert -> alert.getId().equals(id))
-                      .findFirst()
-                      .orElse(null); // or throw custom exception
+        return service.getById(id).orElse(null);
+    }
+
+    // Mark a fraud alert as resolved
+    @PutMapping("/{id}/resolve")
+    public FraudAlertRecord resolve(@PathVariable Long id) {
+        return service.resolve(id);
+    }
+
+    // Get fraud alert by device serial number
+    @GetMapping("/serial/{serial}")
+    public FraudAlertRecord getBySerial(@PathVariable String serial) {
+        return service.getBySerialNumber(serial).orElse(null);
     }
 }
