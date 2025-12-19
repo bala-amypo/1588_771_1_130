@@ -50,6 +50,4 @@ public class FraudAlertRecord {
     public void onCreate() {
         this.alertDate = LocalDateTime.now();
     }
-
-    // getters and setters
 }
