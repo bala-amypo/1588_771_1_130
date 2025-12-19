@@ -34,4 +34,5 @@ public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
     public List<DeviceOwnershipRecord> getAll() {
         return repo.findAll();
     }
+    
 }

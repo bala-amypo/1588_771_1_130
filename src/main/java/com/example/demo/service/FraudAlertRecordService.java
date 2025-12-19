@@ -1,31 +1,10 @@
-// @Service
-// public class FraudAlertService {
+package com.example.demo.service;
 
-//     private final FraudAlertRecordRepository repo;
+import com.example.demo.model.FraudAlertRecord;
 
-//     public FraudAlertService(FraudAlertRecordRepository repo) {
-//         this.repo = repo;
-//     }
+import java.util.List;
 
-//     public FraudAlertRecord create(FraudAlertRecord alert) {
-//         return repo.save(alert);
-//     }
-
-//     public FraudAlertRecord resolve(Long id) {
-//         FraudAlertRecord alert = repo.findById(id).orElseThrow();
-//         alert.setResolved(true);
-//         return repo.save(alert);
-//     }
-
-//     public List<FraudAlertRecord> bySerial(String serial) {
-//         return repo.findBySerialNumber(serial);
-//     }
-
-//     public List<FraudAlertRecord> byClaim(Long claimId) {
-//         return repo.findByClaimId(claimId);
-//     }
-
-//     public List<FraudAlertRecord> all() {
-//         return repo.findAll();
-//     }
-// }
+public interface FraudAlertService {
+    FraudAlertRecord create(FraudAlertRecord alert);
+    List<FraudAlertRecord> getBySerial(String serial);
+}
