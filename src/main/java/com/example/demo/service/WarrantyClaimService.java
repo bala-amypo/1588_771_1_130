@@ -5,6 +5,6 @@ import com.example.demo.model.WarrantyClaimRecord;
 import java.util.List;
 
 public interface WarrantyClaimService {
-    WarrantyClaimRecord submitClaim(WarrantyClaimRecord claim);
+    WarrantyClaimRecord submit(WarrantyClaimRecord claim);
     List<WarrantyClaimRecord> getAll();
 }

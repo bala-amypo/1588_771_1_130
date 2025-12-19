@@ -17,7 +17,7 @@ public class WarrantyClaimServiceImpl implements WarrantyClaimService {
     }
 
     @Override
-    public WarrantyClaimRecord submitClaim(WarrantyClaimRecord claim) {
+    public WarrantyClaimRecord submit(WarrantyClaimRecord claim) {
         return repo.save(claim);
     }
 
