@@ -13,7 +13,7 @@ public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
 
     private final DeviceOwnershipRecordRepository repository;
 
-    public DeviceOwnershipServiceImpl(DeviceOwnershipRepository repository) {
+    public DeviceOwnershipServiceImpl(DeviceOwnershipRecordRepository repository) {
         this.repository = repository;
     }
 
