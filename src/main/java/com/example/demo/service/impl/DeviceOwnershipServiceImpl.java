@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
 
-    private final DeviceOwnershipRepository repository;
+    private final DeviceOwnershipRecordRepository repository;
 
     public DeviceOwnershipServiceImpl(DeviceOwnershipRepository repository) {
         this.repository = repository;
