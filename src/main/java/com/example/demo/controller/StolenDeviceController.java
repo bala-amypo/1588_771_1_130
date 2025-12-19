@@ -1,3 +1,11 @@
+package com.example.demo.controller;
+
+import com.example.demo.model.StolenDeviceReport;
+import com.example.demo.service.StolenDeviceService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/stolen-devices")
 public class StolenDeviceController {
@@ -10,17 +18,17 @@ public class StolenDeviceController {
 
     @PostMapping
     public StolenDeviceReport report(@RequestBody StolenDeviceReport report) {
-        return service.report(report);
+        return service.reportStolen(report);
     }
 
     @GetMapping("/{id}")
     public StolenDeviceReport getById(@PathVariable Long id) {
-        return service.getById(id).orElse(null);
+        return service.getById(id);
     }
 
     @GetMapping("/serial/{serial}")
     public List<StolenDeviceReport> getBySerial(@PathVariable String serial) {
-        return service.getBySerialNumber(serial);
+        return service.getBySerial(serial);
     }
 
     @GetMapping

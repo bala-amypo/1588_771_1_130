@@ -1,39 +1,39 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.StolenDeviceReport;
-import com.example.demo.repository.StolenDeviceReportRepository;
+import com.example.demo.repository.StolenDeviceRepository;
 import com.example.demo.service.StolenDeviceService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StolenDeviceServiceImpl implements StolenDeviceService {
 
-    private final StolenDeviceReportRepository repository;
+    private final StolenDeviceRepository repo;
 
-    public StolenDeviceServiceImpl(StolenDeviceReportRepository repository) {
-        this.repository = repository;
+    public StolenDeviceServiceImpl(StolenDeviceRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public StolenDeviceReport report(StolenDeviceReport report) {
-        return repository.save(report);
+    public StolenDeviceReport reportStolen(StolenDeviceReport report) {
+        return repo.save(report);
     }
 
     @Override
-    public Optional<StolenDeviceReport> getById(Long id) {
-        return repository.findById(id);
+    public StolenDeviceReport getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Report not found"));
     }
 
     @Override
-    public List<StolenDeviceReport> getBySerialNumber(String serialNumber) {
-        return repository.findBySerialNumber(serialNumber);
+    public List<StolenDeviceReport> getBySerial(String serial) {
+        return repo.findBySerial(serial);
     }
 
     @Override
     public List<StolenDeviceReport> getAll() {
-        return repository.findAll();
+        return repo.findAll();
     }
 }
