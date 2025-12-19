@@ -20,9 +20,7 @@ public class FraudRule {
     private String description;
 
     private Boolean active = true;
-
-    private LocalDateTime createdAt;
-
+ 
     public FraudRule() {}
 
     public FraudRule(String ruleCode, String ruleType) {
