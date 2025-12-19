@@ -18,33 +18,31 @@ public class FraudAlertServiceImpl implements FraudAlertService {
     }
 
     @Override
-    public FraudAlertRecord createAlert(FraudAlertRecord alert) {
+    public FraudAlertRecord create(FraudAlertRecord alert) {
+        alert.setResolved(false);
         return repository.save(alert);
     }
 
     @Override
-    public FraudAlertRecord resolveAlert(Long id) {
-        Optional<FraudAlertRecord> alertOpt = repository.findById(id);
-        if (alertOpt.isPresent()) {
-            FraudAlertRecord alert = alertOpt.get();
-            alert.setResolved(true);  // Assuming there’s a 'resolved' field in the entity
-            return repository.save(alert);
-        }
-        return null; // or throw exception if alert not found
+    public FraudAlertRecord resolve(Long id) {
+        FraudAlertRecord alert = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Alert not found"));
+        alert.setResolved(true);
+        return repository.save(alert);
     }
 
     @Override
-    public List<FraudAlertRecord> getAlertsBySerial(String serialNumber) {
+    public Optional<FraudAlertRecord> getById(Long id) {
+        return repository.findById(id);
+    }
+
+    @Override
+    public List<FraudAlertRecord> getBySerialNumber(String serialNumber) {
         return repository.findBySerialNumber(serialNumber);
     }
 
     @Override
-    public List<FraudAlertRecord> getAlertsByClaim(Long claimId) {
-        return repository.findByClaimId(claimId);
-    }
-
-    @Override
-    public List<FraudAlertRecord> getAllAlerts() {
+    public List<FraudAlertRecord> getAll() {
         return repository.findAll();
     }
 }

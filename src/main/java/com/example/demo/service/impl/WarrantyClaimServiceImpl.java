@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.WarrantyClaimRecord;
-import com.example.demo.repository.WarrantyClaimRepository;
+import com.example.demo.repository.WarrantyClaimRecordRepository;
 import com.example.demo.service.WarrantyClaimService;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +11,15 @@ import java.util.Optional;
 @Service
 public class WarrantyClaimServiceImpl implements WarrantyClaimService {
 
-    private final WarrantyClaimRepository repository;
+    private final WarrantyClaimRecordRepository repository;
 
-    public WarrantyClaimServiceImpl(WarrantyClaimRepository repository) {
+    public WarrantyClaimServiceImpl(WarrantyClaimRecordRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public WarrantyClaimRecord submit(WarrantyClaimRecord claim) {
+        claim.setStatus("SUBMITTED");
         return repository.save(claim);
     }
 
@@ -33,13 +34,14 @@ public class WarrantyClaimServiceImpl implements WarrantyClaimService {
     }
 
     @Override
-    public Optional<WarrantyClaimRecord> getBySerialNumber(String serial) {
-        return repository.findBySerialNumber(serial);
+    public List<WarrantyClaimRecord> getBySerialNumber(String serialNumber) {
+        return repository.findBySerialNumber(serialNumber);
     }
 
     @Override
     public WarrantyClaimRecord updateStatus(Long id, String status) {
-        WarrantyClaimRecord claim = repository.findById(id).orElseThrow();
+        WarrantyClaimRecord claim = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Claim not found"));
         claim.setStatus(status);
         return repository.save(claim);
     }

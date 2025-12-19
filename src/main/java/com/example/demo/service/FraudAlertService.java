@@ -13,9 +13,7 @@ public interface FraudAlertService {
 
     Optional<FraudAlertRecord> getById(Long id);
 
-    List<FraudAlertRecord> getAlertsBySerial(String serialNumber);
-
-    List<FraudAlertRecord> getAlertsByClaim(Long claimId);
+    List<FraudAlertRecord> getBySerialNumber(String serialNumber);
 
     List<FraudAlertRecord> getAll();
 }

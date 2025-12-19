@@ -18,36 +18,32 @@ public class FraudRuleServiceImpl implements FraudRuleService {
     }
 
     @Override
-    public FraudRule createRule(FraudRule rule) {
+    public FraudRule create(FraudRule rule) {
         return repository.save(rule);
     }
 
     @Override
-    public FraudRule updateRule(Long id, FraudRule updatedRule) {
-        Optional<FraudRule> existingRuleOpt = repository.findById(id);
-        if (existingRuleOpt.isPresent()) {
-            FraudRule existingRule = existingRuleOpt.get();
-            existingRule.setRuleCode(updatedRule.getRuleCode());
-            existingRule.setDescription(updatedRule.getDescription());
-            existingRule.setActive(updatedRule.isActive());
-            // Add any other fields you have in FraudRule
-            return repository.save(existingRule);
-        }
-        return null; // or throw custom exception
+    public FraudRule update(Long id, FraudRule updated) {
+        FraudRule rule = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rule not found"));
+        rule.setRuleCode(updated.getRuleCode());
+        rule.setDescription(updated.getDescription());
+        rule.setActive(updated.isActive());
+        return repository.save(rule);
     }
 
     @Override
-    public List<FraudRule> getActiveRules() {
-        return repository.findByActiveTrue();
+    public Optional<FraudRule> getById(Long id) {
+        return repository.findById(id);
     }
 
     @Override
-    public FraudRule getRuleByCode(String ruleCode) {
-        return repository.findByRuleCode(ruleCode).orElse(null);
+    public Optional<FraudRule> getRuleByCode(String ruleCode) {
+        return repository.findByRuleCode(ruleCode);
     }
 
     @Override
-    public List<FraudRule> getAllRules() {
+    public List<FraudRule> getAll() {
         return repository.findAll();
     }
 }
