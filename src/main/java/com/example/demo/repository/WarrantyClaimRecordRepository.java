@@ -8,5 +8,5 @@ import java.util.List;
 public interface WarrantyClaimRecordRepository
         extends JpaRepository<WarrantyClaimRecord, Long> {
 
-    List<WarrantyClaimRecord> findBySerial(String serial);
+    List<WarrantyClaimRecord> findBySerialNumber(String serialNumber);
 }
