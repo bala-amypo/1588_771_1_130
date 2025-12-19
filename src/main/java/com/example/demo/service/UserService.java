@@ -11,8 +11,5 @@ public interface UserService {
     User registerUser(RegisterRequest req);
 
     User loginUser(LoginRequest req);
-
-    User getById(Long id);
-
-    List<User> getAll();
+    
 }

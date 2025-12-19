@@ -1,34 +1,33 @@
-// package com.example.demo.controller;
+package com.example.demo.controller;
 
-// import com.example.demo.model.User;
-// import com.example.demo.service.UserService;
-// import org.springframework.web.bind.annotation.*;
+import com.example.demo.model.User;
+import com.example.demo.service.UserService;
+import org.springframework.web.bind.annotation.*;
 
-// import java.util.List;
+import java.util.List;
 
-// @RestController
-// @RequestMapping("/api/users")
-// public class UserController {
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
 
-//     private final UserService userService;
+    private final UserService service;
 
-//     public UserController(UserService userService) {
-//         this.userService = userService;
-//     }
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
-//     /**
-//      * Create a new user (ADMIN / FRAUD_ANALYST / SUPPORT_AGENT)
-//      */
-//     @PostMapping
-//     public User registerUser(@RequestBody User user) {
-//         return userService.register(user);
-//     }
+    @PostMapping
+    public User register(@RequestBody User user) {
+        return service.register(user);
+    }
 
-//     /**
-//      * Get all users
-//      */
-//     @GetMapping
-//     public List<User> getAllUsers() {
-//         return userService.getAll();
-//     }
-// }
+    @GetMapping("/{id}")
+    public User get(@PathVariable Long id) {
+        return service.getById(id);
+    }
+
+    @GetMapping
+    public List<User> getAll() {
+        return service.getAll();
+    }
+}
