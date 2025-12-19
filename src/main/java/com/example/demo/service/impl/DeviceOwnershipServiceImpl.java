@@ -1,8 +1,7 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
 
 import com.example.demo.model.DeviceOwnershipRecord;
-import com.example.demo.repository.DeviceOwnershipRecordRepository;
-import com.example.demo.service.DeviceOwnershipService;
+import com.example.demo.repository.DeviceOwnershipRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,29 +9,36 @@ import java.util.List;
 @Service
 public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
 
-    private final DeviceOwnershipRecordRepository repo;
+    private final DeviceOwnershipRepository repository;
 
-    public DeviceOwnershipServiceImpl(DeviceOwnershipRecordRepository repo) {
-        this.repo = repo;
+    public DeviceOwnershipServiceImpl(DeviceOwnershipRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord device) {
-        if (repo.existsBySerialNumber(device.getSerialNumber())) {
-            throw new IllegalArgumentException("Serial number already exists");
-        }
-        return repo.save(device);
+        return repository.save(device);
     }
 
     @Override
     public DeviceOwnershipRecord getBySerial(String serial) {
-        return repo.findBySerialNumber(serial)
-                .orElseThrow(() -> new RuntimeException("Device not found"));
+        return repository.findBySerial(serial)
+                .orElseThrow(() ->
+                        new RuntimeException("Device not found with serial: " + serial));
     }
 
     @Override
     public List<DeviceOwnershipRecord> getAll() {
-        return repo.findAll();
+        return repository.findAll();
     }
-    
+
+    @Override
+    public DeviceOwnershipRecord updateDeviceStatus(Long id, Boolean active) {
+        DeviceOwnershipRecord device = repository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Device not found with id: " + id));
+
+        device.setActive(active);
+        return repository.save(device);
+    }
 }
