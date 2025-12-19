@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface FraudAlertRepository
+public interface FraudAlertRecordRepository
         extends JpaRepository<FraudAlertRecord, Long> {
 
     List<FraudAlertRecord> findBySerialNumber(String serialNumber);
