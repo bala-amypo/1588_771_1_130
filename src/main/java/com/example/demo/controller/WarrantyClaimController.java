@@ -25,4 +25,20 @@ public class WarrantyClaimController {
     public List<WarrantyClaimRecord> getAll() {
         return service.getAll();
     }
+
+
+    @GetMapping("/{id}")
+    public WarrantyClaimRecord getById(@PathVariable Long id) {
+        return service.getById(id);
+    }
+
+    @GetMapping("/serial/{serialNumber}")
+    public List<WarrantyClaimRecord> getBySerialNumber(@PathVariable String serialNumber) {
+        return service.getBySerialNumber(serialNumber);
+    }
+
+    @PutMapping("/{id}/status")
+    public WarrantyClaimRecord updateStatus(@PathVariable Long id, @RequestParam String status) {
+        return service.updateStatus(id, status);
+    }
 }
