@@ -5,5 +5,6 @@ import java.util.List;
 
 public interface StolenDeviceService {
     StolenDeviceReport reportStolen(StolenDeviceReport report);
+    List<StolenDeviceReport> getReportsBySerial(String serial);
     List<StolenDeviceReport> getAllReports();
 }
