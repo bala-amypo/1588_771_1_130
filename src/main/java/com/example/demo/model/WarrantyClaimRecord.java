@@ -15,7 +15,11 @@ public class WarrantyClaimRecord {
     private Long id;
 
     private String serialNumber;
+    private String claimantName;
+    private String claimantEmail;
     private String claimReason;
+
+    private LocalDateTime submittedAt;
 
     private String status = "PENDING";
 }
