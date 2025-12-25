@@ -1,12 +1,13 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.StolenDeviceReport;
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.*;
 
-import java.util.List;
+import com.example.demo.model.*;
 
-public interface StolenDeviceRecordRepository
+public interface StolenDeviceReportRepository
         extends JpaRepository<StolenDeviceReport, Long> {
 
-    List<StolenDeviceReport> findBySerialNumber(String serialNumber);
+    boolean existsBySerialNumber(String s);
+    List<StolenDeviceReport> findBySerialNumber(String s);
 }
