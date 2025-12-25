@@ -10,4 +10,7 @@ public interface FraudAlertService {
     List<FraudAlertRecord> getResolvedAlerts(boolean resolved);
 
     void updateAlertStatus(Long id, boolean resolved);
+
+    // ADD THIS
+    List<FraudAlertRecord> getAllAlerts();
 }
