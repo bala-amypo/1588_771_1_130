@@ -6,13 +6,18 @@ import java.util.List;
 
 public interface FraudAlertService {
 
+    /**
+     * Create a new fraud alert
+     */
     FraudAlertRecord createAlert(FraudAlertRecord alert);
 
-    FraudAlertRecord resolveAlert(Long id);
+    /**
+     * Resolve an existing fraud alert
+     */
+    FraudAlertRecord resolveAlert(Long alertId);
 
-    List<FraudAlertRecord> getAlertsBySerial(String serialNumber);
-
+    /**
+     * Get alerts by claim ID
+     */
     List<FraudAlertRecord> getAlertsByClaim(Long claimId);
-
-    List<FraudAlertRecord> getAllAlerts();
 }
