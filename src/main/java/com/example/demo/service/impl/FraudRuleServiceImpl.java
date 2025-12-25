@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.model.FraudRule;
 import com.example.demo.repository.FraudRuleRepository;
 import com.example.demo.service.FraudRuleService;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,39 +12,39 @@ import java.util.Optional;
 @Service
 public class FraudRuleServiceImpl implements FraudRuleService {
 
-    private final FraudRuleRepository repository;
+    private final FraudRuleRepository repo;
 
-    public FraudRuleServiceImpl(FraudRuleRepository repository) {
-        this.repository = repository;
+    public FraudRuleServiceImpl(FraudRuleRepository repo) {
+        this.repo = repo;
     }
 
+    /**
+     * Create a fraud rule.
+     * Duplicate ruleCode is not allowed.
+     */
     @Override
-    public FraudRule create(FraudRule rule) {
-        return repository.save(rule);
+    public FraudRule createRule(FraudRule rule) {
+
+        if (repo.findByRuleCode(rule.getRuleCode()).isPresent()) {
+            throw new IllegalArgumentException("Fraud rule already exists");
+        }
+
+        return repo.save(rule);
     }
 
+    /**
+     * Get all active rules
+     */
     @Override
-    public FraudRule update(Long id, FraudRule updated) {
-        FraudRule rule = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rule not found"));
-        rule.setRuleCode(updated.getRuleCode());
-        rule.setDescription(updated.getDescription());
-        rule.setActive(updated.isActive());
-        return repository.save(rule);
+    public List<FraudRule> getActiveRules() {
+        return repo.findByActiveTrue();
     }
 
-    @Override
-    public Optional<FraudRule> getById(Long id) {
-        return repository.findById(id);
-    }
-
+    /**
+     * Get rule by code
+     */
     @Override
     public Optional<FraudRule> getRuleByCode(String ruleCode) {
-        return repository.findByRuleCode(ruleCode);
-    }
-
-    @Override
-    public List<FraudRule> getAll() {
-        return repository.findAll();
+        return repo.findByRuleCode(ruleCode);
     }
 }
