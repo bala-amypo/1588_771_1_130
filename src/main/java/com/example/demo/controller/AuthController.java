@@ -1,28 +1,55 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.*;
 import com.example.demo.model.User;
-import com.example.demo.service.UserService;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.security.JwtTokenProvider;
+
+import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService service;
+    private final UserRepository repo;
+    private final PasswordEncoder encoder;
+    private final JwtTokenProvider jwt;
 
-    public AuthController(UserService service) {
-        this.service = service;
+    public AuthController(UserRepository r, PasswordEncoder e, JwtTokenProvider j) {
+        this.repo = r;
+        this.encoder = e;
+        this.jwt = j;
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody RegisterRequest req) {
-        return service.registerUser(req);
+    public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
+
+        if (repo.findByEmail(req.getEmail()).isPresent())
+            return ResponseEntity.status(409).build();
+
+        User u = User.builder()
+                .email(req.getEmail())
+                .password(encoder.encode(req.getPassword()))
+                .roles(req.getRoles())
+                .name(req.getName())
+                .build();
+
+        repo.save(u);
+
+        String t = jwt.createToken(u.getId(), u.getEmail(), u.getRoles());
+        return ResponseEntity.ok(new AuthResponse(t));
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody LoginRequest req) {
-        return service.loginUser(req);
+    public ResponseEntity<?> login(@RequestBody AuthRequest req) {
+
+        return repo.findByEmail(req.getEmail())
+                .filter(u -> encoder.matches(req.getPassword(), u.getPassword()))
+                .map(u -> ResponseEntity.ok(
+                        new AuthResponse(jwt.createToken(
+                                u.getId(), u.getEmail(), u.getRoles()))))
+                .orElse(ResponseEntity.status(401).build());
     }
 }
