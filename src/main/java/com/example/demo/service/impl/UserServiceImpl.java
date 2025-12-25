@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.LoginRequest;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
@@ -16,16 +17,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(User user) {
-        // Save user to DB
         userRepository.save(user);
     }
 
     @Override
-    public boolean login(String username, String password) {
-        User user = userRepository.findByUsername(username).orElse(null);
-        if (user == null) return false;
-
-        // Simple password check (in production, use BCrypt)
-        return user.getPassword().equals(password);
+    public boolean loginUser(LoginRequest loginRequest) {
+        return userRepository.findByUsername(loginRequest.getUsername())
+                .map(user -> user.getPassword().equals(loginRequest.getPassword()))
+                .orElse(false);
     }
 }
