@@ -1,55 +1,55 @@
-package com.example.demo.service.impl;
+package com.example.demo.entity;
 
-import com.example.demo.model.DeviceOwnershipRecord;
-import com.example.demo.repository.DeviceOwnershipRecordRepository;
-import com.example.demo.service.DeviceOwnershipService;
-import org.springframework.stereotype.Service;
+import jakarta.persistence.*;
 
-import java.util.List;
-import java.util.Optional;
+@Entity
+@Table(name = "device_ownership")
+public class DeviceOwnershipRecord {
 
-@Service
-public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private final DeviceOwnershipRecordRepository repository;
+    @Column(unique = true, nullable = false)
+    private String serialNumber;
 
-    public DeviceOwnershipServiceImpl(DeviceOwnershipRecordRepository repository) {
-        this.repository = repository;
+    private String ownerName;
+
+    private boolean active;
+
+    public DeviceOwnershipRecord() {}
+
+    public DeviceOwnershipRecord(String serialNumber, String ownerName, boolean active) {
+        this.serialNumber = serialNumber;
+        this.ownerName = ownerName;
+        this.active = active;
     }
 
-    @Override
-    public DeviceOwnershipRecord getById(Long id) {
-        return repository.findById(id).orElse(null);
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public Optional<DeviceOwnershipRecord> getBySerial(String serial) {
-        return repository.findBySerialNumber(serial);
+    public String getSerialNumber() {
+        return serialNumber;
     }
 
-    @Override
-    public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord device) {
-        // Check if a device with the same serial already exists
-        if (repository.findBySerialNumber(device.getSerialNumber()).isPresent()) {
-            throw new IllegalArgumentException("Device with this serial number already exists!");
-        }
-        return repository.save(device);
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
-    @Override
-    public List<DeviceOwnershipRecord> getAllDevices() {
-        return repository.findAll();
+    public String getOwnerName() {
+        return ownerName;
     }
 
-    @Override
-    public DeviceOwnershipRecord updateDeviceStatus(Long id, boolean active) {
-        Optional<DeviceOwnershipRecord> optionalDevice = repository.findById(id);
-        if (optionalDevice.isPresent()) {
-            DeviceOwnershipRecord device = optionalDevice.get();
-            device.setActive(active);
-            return repository.save(device);
-        } else {
-            throw new IllegalArgumentException("Device not found with id: " + id);
-        }
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
