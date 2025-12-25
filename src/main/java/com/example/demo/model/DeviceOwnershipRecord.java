@@ -1,29 +1,22 @@
 package com.example.demo.model;
 
-import lombok.*;
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import lombok.*;
+import java.time.LocalDateTime;
 
-@Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "device_ownership")
 public class DeviceOwnershipRecord {
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String serialNumber;
-
     private String ownerName;
-    private String ownerEmail;
-
-    private LocalDate warrantyExpiration;
-    private LocalDate purchaseDate;
-
-    private Boolean active;
-    
+    private LocalDateTime purchaseDate;
+    private LocalDateTime warrantyExpiration;
 }

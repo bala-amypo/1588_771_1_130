@@ -1,24 +1,19 @@
 package com.example.demo.model;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
-@Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "fraud_rules")
 public class FraudRule {
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String ruleCode;
-
-    private String ruleType;
     private String description;
-
-    private Boolean active = true;
 }

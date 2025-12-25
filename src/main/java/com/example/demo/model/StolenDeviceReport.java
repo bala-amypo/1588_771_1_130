@@ -1,22 +1,21 @@
 package com.example.demo.model;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDateTime;
 
-@Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "stolen_devices")
 public class StolenDeviceReport {
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String serialNumber;
-    private String reportedBy;
-    private LocalDateTime reportDate;
-
-    private String details;
+    private String description;
+    private LocalDateTime reportedAt;
 }

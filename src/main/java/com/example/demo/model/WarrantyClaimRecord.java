@@ -1,25 +1,22 @@
 package com.example.demo.model;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDateTime;
 
-@Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "warranty_claims")
 public class WarrantyClaimRecord {
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String serialNumber;
-    private String claimantName;
-    private String claimantEmail;
     private String claimReason;
-
-    private LocalDateTime submittedAt;
-
-    private String status = "PENDING";
+    private String status;
+    private LocalDateTime claimDate;
 }
