@@ -8,6 +8,6 @@ import com.example.demo.model.*;
 public interface StolenDeviceReportRepository
         extends JpaRepository<StolenDeviceReport, Long> {
 
-    boolean existsBySerialNumber(String s);
-    List<StolenDeviceReport> findBySerialNumber(String s);
+    boolean existsBySerialNumber(String serialNumber);
+    List<StolenDeviceReport> findBySerialNumber(String serialNumber);
 }
