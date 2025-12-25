@@ -1,3 +1,12 @@
+package com.example.demo.controller;
+
+import com.example.demo.model.DeviceOwnershipRecord;
+import com.example.demo.service.DeviceOwnershipService;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/devices")
 public class DeviceOwnershipController {
@@ -9,7 +18,8 @@ public class DeviceOwnershipController {
     }
 
     @PostMapping
-    public DeviceOwnershipRecord register(@RequestBody DeviceOwnershipRecord d) {
+    public DeviceOwnershipRecord register(
+            @RequestBody DeviceOwnershipRecord d) {
         return service.registerDevice(d);
     }
 
