@@ -1,55 +1,46 @@
-package com.example.demo.entity;
+package com.example.demo.service.impl;
 
-import jakarta.persistence.*;
+import com.example.demo.entity.DeviceOwnershipRecord;
+import com.example.demo.repository.DeviceOwnershipRecordRepository;
+import com.example.demo.service.DeviceOwnershipService;
+import org.springframework.stereotype.Service;
 
-@Entity
-@Table(name = "device_ownership")
-public class DeviceOwnershipRecord {
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Service
+public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
 
-    @Column(unique = true, nullable = false)
-    private String serialNumber;
+    private final DeviceOwnershipRecordRepository repo;
 
-    private String ownerName;
-
-    private boolean active;
-
-    public DeviceOwnershipRecord() {}
-
-    public DeviceOwnershipRecord(String serialNumber, String ownerName, boolean active) {
-        this.serialNumber = serialNumber;
-        this.ownerName = ownerName;
-        this.active = active;
+    public DeviceOwnershipServiceImpl(DeviceOwnershipRecordRepository repo) {
+        this.repo = repo;
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord d) {
+        if (repo.existsBySerialNumber(d.getSerialNumber())) {
+            throw new IllegalArgumentException("Device already registered");
+        }
+        return repo.save(d);
     }
 
-    public String getSerialNumber() {
-        return serialNumber;
+    @Override
+    public Optional<DeviceOwnershipRecord> getBySerial(String s) {
+        return repo.findBySerialNumber(s);
     }
 
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
+    @Override
+    public List<DeviceOwnershipRecord> getAllDevices() {
+        return repo.findAll();
     }
 
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+    @Override
+    public DeviceOwnershipRecord updateDeviceStatus(Long id, boolean active) {
+        DeviceOwnershipRecord d = repo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Device not found"));
+        d.setActive(active);
+        return repo.save(d);
     }
 }
