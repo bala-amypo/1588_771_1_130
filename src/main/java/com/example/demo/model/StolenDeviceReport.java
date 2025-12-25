@@ -9,13 +9,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "stolen_devices")
+@Table(name = "stolen_device_reports")
 public class StolenDeviceReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String serialNumber;
-    private String description;
-    private LocalDateTime reportedAt;
+    private String reportedBy;
+    private LocalDateTime reportDate;
 }

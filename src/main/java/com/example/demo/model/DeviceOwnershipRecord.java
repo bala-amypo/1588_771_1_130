@@ -9,12 +9,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "device_ownership")
+@Table(name = "device_ownerships")
 public class DeviceOwnershipRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String serialNumber;
     private String ownerName;
     private LocalDateTime purchaseDate;

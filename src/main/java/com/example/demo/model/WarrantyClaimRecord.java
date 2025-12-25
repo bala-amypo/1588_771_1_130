@@ -14,9 +14,8 @@ public class WarrantyClaimRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String serialNumber;
     private String claimReason;
-    private String status;
     private LocalDateTime claimDate;
+    private String status;
 }
