@@ -1,26 +1,23 @@
 package com.example.demo.model;
 
-import lombok.*;
 import jakarta.persistence.*;
-import java.util.Set;
+import lombok.*;
+import java.time.LocalDateTime;
 
-@Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String username;
     private String email;
     private String password;
-    private String name;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> roles;
-
+    private String roles;
     private LocalDateTime createdAt;
 }
