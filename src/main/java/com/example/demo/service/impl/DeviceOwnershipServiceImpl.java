@@ -5,9 +5,9 @@ import com.example.demo.repository.DeviceOwnershipRecordRepository;
 import com.example.demo.service.DeviceOwnershipService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
-@Service   // <-- important!
+@Service
 public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
 
     private final DeviceOwnershipRecordRepository repository;
@@ -22,7 +22,18 @@ public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
     }
 
     @Override
-    public List<DeviceOwnershipRecord> getAllDevices() {
-        return repository.findAll();
+    public Optional<DeviceOwnershipRecord> getBySerial(String serialNumber) {
+        return repository.findBySerialNumber(serialNumber);
+    }
+
+    @Override
+    public DeviceOwnershipRecord updateDeviceStatus(Long id, Boolean status) {
+        Optional<DeviceOwnershipRecord> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            DeviceOwnershipRecord record = optional.get();
+            record.setStatus(status);
+            return repository.save(record);
+        }
+        return null; // or throw exception
     }
 }
