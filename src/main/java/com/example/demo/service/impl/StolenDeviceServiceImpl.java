@@ -5,7 +5,6 @@ import com.example.demo.repository.StolenDeviceReportRepository;
 import com.example.demo.service.StolenDeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -15,22 +14,12 @@ public class StolenDeviceServiceImpl implements StolenDeviceService {
     private final StolenDeviceReportRepository repo;
 
     @Override
-    public StolenDeviceReport reportStolenDevice(StolenDeviceReport report) {
+    public StolenDeviceReport reportStolen(StolenDeviceReport report) {
         return repo.save(report);
     }
 
     @Override
-    public List<StolenDeviceReport> getAllStolenDevices() {
+    public List<StolenDeviceReport> getAllReports() {
         return repo.findAll();
-    }
-
-    @Override
-    public StolenDeviceReport getStolenDeviceById(Long id) {
-        return repo.findById(id).orElse(null);
-    }
-
-    @Override
-    public void deleteStolenDevice(Long id) {
-        repo.deleteById(id);
     }
 }

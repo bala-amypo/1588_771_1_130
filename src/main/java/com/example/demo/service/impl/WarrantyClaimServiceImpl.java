@@ -6,8 +6,6 @@ import com.example.demo.service.WarrantyClaimService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class WarrantyClaimServiceImpl implements WarrantyClaimService {
@@ -15,22 +13,16 @@ public class WarrantyClaimServiceImpl implements WarrantyClaimService {
     private final WarrantyClaimRepository repo;
 
     @Override
-    public WarrantyClaimRecord submitWarrantyClaim(WarrantyClaimRecord claim) {
+    public WarrantyClaimRecord submitClaim(WarrantyClaimRecord claim) {
+        claim.setClaimStatus("PENDING");
         return repo.save(claim);
     }
 
     @Override
-    public List<WarrantyClaimRecord> getAllWarrantyClaims() {
-        return repo.findAll();
-    }
-
-    @Override
-    public WarrantyClaimRecord getWarrantyClaimById(Long id) {
-        return repo.findById(id).orElse(null);
-    }
-
-    @Override
-    public void deleteWarrantyClaim(Long id) {
-        repo.deleteById(id);
+    public WarrantyClaimRecord updateClaimStatus(Long id, String status) {
+        WarrantyClaimRecord claim = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Claim not found"));
+        claim.setClaimStatus(status);
+        return repo.save(claim);
     }
 }
