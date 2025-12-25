@@ -1,16 +1,20 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.User;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     private final UserRepository userRepo;
@@ -23,26 +27,32 @@ public class AuthController {
         this.tokenProvider = tokenProvider;
     }
 
-    public ResponseEntity<AuthResponse> register(RegisterRequest req) {
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
         if (userRepo.findByEmail(req.getEmail()).isPresent()) {
-            return ResponseEntity.status(409).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
         }
+
         User user = User.builder()
                 .email(req.getEmail())
-                .password(passwordEncoder.encode(req.getPassword()))
                 .name(req.getName())
+                .password(passwordEncoder.encode(req.getPassword()))
                 .roles(req.getRoles())
                 .build();
-        user = userRepo.save(user);
+
+        userRepo.save(user);
+
         String token = tokenProvider.createToken(user.getId(), user.getEmail(), user.getRoles());
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
-    public ResponseEntity<AuthResponse> login(AuthRequest req) {
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthRequest req) {
         User user = userRepo.findByEmail(req.getEmail()).orElse(null);
         if (user == null || !passwordEncoder.matches(req.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
+
         String token = tokenProvider.createToken(user.getId(), user.getEmail(), user.getRoles());
         return ResponseEntity.ok(new AuthResponse(token));
     }
