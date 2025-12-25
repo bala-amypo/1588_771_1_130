@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.DeviceOwnershipRecord;
-import com.example.demo.repository.DeviceOwnershipRepository;
+import com.example.demo.repository.DeviceOwnershipRecordRepository;
 import com.example.demo.service.DeviceOwnershipService;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +11,9 @@ import java.util.Optional;
 @Service
 public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
 
-    private final DeviceOwnershipRepository repository;
+    private final DeviceOwnershipRecordRepository repository;
 
-    public DeviceOwnershipServiceImpl(DeviceOwnershipRepository repository) {
+    public DeviceOwnershipServiceImpl(DeviceOwnershipRecordRepository repository) {
         this.repository = repository;
     }
 
