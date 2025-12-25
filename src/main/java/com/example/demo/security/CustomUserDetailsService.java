@@ -2,30 +2,19 @@ package com.example.demo.security;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-
-import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService {
 
-    private final UserRepository repo;
+    private final UserRepository userRepo;
 
-    public CustomUserDetailsService(UserRepository repo) {
-        this.repo = repo;
+    public CustomUserDetailsService(UserRepository userRepo) {
+        this.userRepo = userRepo;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
-
-        User u = repo.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(email));
-
-        return org.springframework.security.core.userdetails.User
-                .withUsername(u.getEmail())
-                .password(u.getPassword())
-                .authorities(u.getRoles().toArray(new String[0]))
-                .build();
+    public User loadUserByEmail(String email) {
+        return userRepo.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }
