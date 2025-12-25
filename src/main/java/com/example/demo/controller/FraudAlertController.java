@@ -2,12 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.model.FraudAlertRecord;
 import com.example.demo.service.FraudAlertService;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/fraud-alerts")
+@RequestMapping("/alerts")
 public class FraudAlertController {
 
     private final FraudAlertService service;
@@ -16,28 +15,23 @@ public class FraudAlertController {
         this.service = service;
     }
 
+    /**
+     * Create a fraud alert
+     * POST /alerts
+     */
     @PostMapping
-    public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord alert) {
+    public FraudAlertRecord createAlert(
+            @RequestBody FraudAlertRecord alert) {
         return service.createAlert(alert);
     }
 
+    /**
+     * Resolve a fraud alert
+     * PUT /alerts/{id}/resolve
+     */
     @PutMapping("/{id}/resolve")
-    public FraudAlertRecord resolveAlert(@PathVariable Long id) {
+    public FraudAlertRecord resolveAlert(
+            @PathVariable Long id) {
         return service.resolveAlert(id);
-    }
-
-    @GetMapping("/serial/{serialNumber}")
-    public List<FraudAlertRecord> getBySerial(@PathVariable String serialNumber) {
-        return service.getAlertsBySerial(serialNumber);
-    }
-
-    @GetMapping("/claim/{claimId}")
-    public List<FraudAlertRecord> getByClaim(@PathVariable Long claimId) {
-        return service.getAlertsByClaim(claimId);
-    }
-
-    @GetMapping
-    public List<FraudAlertRecord> getAll() {
-        return service.getAllAlerts();
     }
 }
