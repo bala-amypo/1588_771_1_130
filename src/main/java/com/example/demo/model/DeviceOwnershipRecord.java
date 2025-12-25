@@ -22,6 +22,8 @@ public class DeviceOwnershipRecord {
     private String ownerEmail;
 
     private LocalDate warrantyExpiration;
+    private LocalDate purchaseDate;
 
     private Boolean active;
+    
 }
