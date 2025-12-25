@@ -16,6 +16,11 @@ public class FraudAlertRecord {
 
     private Long claimId;
     private String serialNumber;
+    private String alertType;
+    private String severity;
+    private String message;
+    
+    private LocalDateTime alertDate;
 
     private Boolean resolved = false;
 }
