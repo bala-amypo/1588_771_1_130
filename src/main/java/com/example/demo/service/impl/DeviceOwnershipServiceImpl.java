@@ -23,4 +23,14 @@ public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
     public List<DeviceOwnershipRecord> getAllDevices() {
         return repo.findAll();
     }
+
+    @Override
+    public DeviceOwnershipRecord getDeviceById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    @Override
+    public void deleteDevice(Long id) {
+        repo.deleteById(id);
+    }
 }

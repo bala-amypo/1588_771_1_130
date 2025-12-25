@@ -6,18 +6,11 @@ import java.util.List;
 
 public interface StolenDeviceService {
 
-    /**
-     * Report a device as stolen
-     */
-    StolenDeviceReport reportStolen(StolenDeviceReport report);
+    StolenDeviceReport reportStolenDevice(StolenDeviceReport report);
 
-    /**
-     * Get all stolen device reports
-     */
-    List<StolenDeviceReport> getAllReports();
+    List<StolenDeviceReport> getAllStolenDevices();
 
-    /**
-     * Get stolen device reports by serial number
-     */
-    List<StolenDeviceReport> getReportsBySerial(String serialNumber);
+    StolenDeviceReport getStolenDeviceById(Long id);
+
+    void deleteStolenDevice(Long id);
 }
