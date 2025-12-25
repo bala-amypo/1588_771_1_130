@@ -1,33 +1,46 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.RegisterRequest;
-import com.example.demo.dto.LoginRequest;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Service
-@RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+import java.util.Optional;
 
-    private final UserRepository repo;
+public class UserServiceImpl {
 
-    @Override
-    public User registerUser(RegisterRequest req) {
-        User u = User.builder()
-                .username(req.getUsername())
-                .email(req.getEmail())
-                .password(req.getPassword())
-                .roles(req.getRoles())
-                .build();
-        return repo.save(u);
+    private final UserRepository userRepo;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepo, PasswordEncoder passwordEncoder) {
+        this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public User loginUser(LoginRequest req) {
-        return repo.findByEmail(req.getEmail())
-                   .orElseThrow(() -> new RuntimeException("User not found"));
+    /**
+     * Registers a new user. Throws IllegalArgumentException if email already exists.
+     */
+    public User registerUser(RegisterRequest req) {
+        Optional<User> existing = userRepo.findByEmail(req.getEmail());
+        if (existing.isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        User user = User.builder()
+                .email(req.getEmail())                  // matches DTO
+                .name(req.getName())                    // optional display name
+                .password(passwordEncoder.encode(req.getPassword()))
+                .roles(req.getRoles())
+                .build();
+
+        return userRepo.save(user);
+    }
+
+    /**
+     * Loads user by email (used by authentication).
+     */
+    public User loadUserByEmail(String email) {
+        return userRepo.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }
