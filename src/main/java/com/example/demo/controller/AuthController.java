@@ -1,59 +1,44 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.security.JwtTokenProvider;
-import org.springframework.http.HttpStatus;
+import com.example.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserRepository userRepo;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider tokenProvider;
+    private final UserService userService;
 
-    public AuthController(UserRepository userRepo, PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider) {
-        this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
-        this.tokenProvider = tokenProvider;
+    public AuthController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
-        if (userRepo.findByEmail(req.getEmail()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
-        }
+    public ResponseEntity<String> register(@RequestBody RegisterRequest req) {
 
+        // Build the user correctly
         User user = User.builder()
+                .username(req.getUsername())  // corrected
                 .email(req.getEmail())
-                .name(req.getName())
-                .password(passwordEncoder.encode(req.getPassword()))
-                .roles(req.getRoles())
+                .password(req.getPassword())
+                .role("USER")  // single role field
                 .build();
 
-        userRepo.save(user);
+        userService.registerUser(user);
 
-        String token = tokenProvider.createToken(user.getId(), user.getEmail(), user.getRoles());
-        return ResponseEntity.ok(new AuthResponse(token));
+        return ResponseEntity.ok("User registered: " + user.getUsername());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest req) {
-        User user = userRepo.findByEmail(req.getEmail()).orElse(null);
-        if (user == null || !passwordEncoder.matches(req.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    public ResponseEntity<String> login(@RequestBody RegisterRequest req) {
+        // Just an example
+        boolean success = userService.login(req.getUsername(), req.getPassword());
+        if (success) {
+            return ResponseEntity.ok("Login successful for: " + req.getUsername());
         }
-
-        String token = tokenProvider.createToken(user.getId(), user.getEmail(), user.getRoles());
-        return ResponseEntity.ok(new AuthResponse(token));
+        return ResponseEntity.status(401).body("Invalid credentials");
     }
 }
