@@ -1,11 +1,13 @@
+// 2️⃣ Repository
 package com.example.demo.repository;
 
 import com.example.demo.model.FraudAlertRecord;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface FraudAlertRecordRepository {
-    FraudAlertRecord save(FraudAlertRecord alert);
-    Optional<FraudAlertRecord> findById(Long id);
-    List<FraudAlertRecord> findByClaimId(Long claimId);
+import java.util.List;
+
+@Repository
+public interface FraudAlertRecordRepository extends JpaRepository<FraudAlertRecord, Long> {
+    List<FraudAlertRecord> findByResolved(boolean resolved);  // custom query example
 }

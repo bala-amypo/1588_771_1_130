@@ -1,3 +1,4 @@
+// 5️⃣ Controller
 package com.example.demo.controller;
 
 import com.example.demo.model.FraudAlertRecord;
@@ -16,11 +17,21 @@ public class FraudAlertController {
 
     @PostMapping
     public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord alert) {
-        return service.createAlert(alert);
+        return service.saveAlert(alert);
     }
 
     @GetMapping
     public List<FraudAlertRecord> getAllAlerts() {
         return service.getAllAlerts();
+    }
+
+    @GetMapping("/resolved")
+    public List<FraudAlertRecord> getResolvedAlerts(@RequestParam boolean resolved) {
+        return service.getResolvedAlerts(resolved);
+    }
+
+    @PutMapping("/{id}/status")
+    public FraudAlertRecord updateStatus(@PathVariable Long id, @RequestParam boolean resolved) {
+        return service.updateAlertStatus(id, resolved);
     }
 }
