@@ -1,9 +1,16 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "device_ownership")
+@Data                   // generates getters, setters, toString, equals, hashcode
+@NoArgsConstructor       // no-args constructor
+@AllArgsConstructor      // all-args constructor
+@Builder                 // builder pattern
 public class DeviceOwnershipRecord {
 
     @Id
@@ -14,30 +21,5 @@ public class DeviceOwnershipRecord {
 
     private Boolean status;
 
-    public DeviceOwnershipRecord() {}
-
-    public DeviceOwnershipRecord(String serialNumber, Boolean status) {
-        this.serialNumber = serialNumber;
-        this.status = status;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
+    private LocalDate warrantyExpiration; // ← needed for test cases
 }
