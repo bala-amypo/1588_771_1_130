@@ -1,49 +1,107 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.model.WarrantyClaimRecord;
+import com.example.demo.repository.DeviceOwnershipRecordRepository;
+import com.example.demo.repository.FraudAlertRecordRepository;
+import com.example.demo.repository.FraudRuleRepository;
+import com.example.demo.repository.StolenDeviceReportRepository;
 import com.example.demo.repository.WarrantyClaimRecordRepository;
-import com.example.demo.service.WarrantyClaimService;
+
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
-public class WarrantyClaimServiceImpl implements WarrantyClaimService {
+public class WarrantyClaimServiceImpl {
 
-    private final WarrantyClaimRecordRepository repo;
+    private final WarrantyClaimRecordRepository claimRepo;
+    private final DeviceOwnershipRecordRepository deviceRepo;
+    private final StolenDeviceReportRepository stolenRepo;
+    private final FraudAlertRecordRepository alertRepo;
+    private final FraudRuleRepository ruleRepo;
 
-    public WarrantyClaimServiceImpl(WarrantyClaimRecordRepository repo) {
-        this.repo = repo;
+    public WarrantyClaimServiceImpl(
+            WarrantyClaimRecordRepository claimRepo,
+            DeviceOwnershipRecordRepository deviceRepo,
+            StolenDeviceReportRepository stolenRepo,
+            FraudAlertRecordRepository alertRepo,
+            FraudRuleRepository ruleRepo) {
+
+        this.claimRepo = claimRepo;
+        this.deviceRepo = deviceRepo;
+        this.stolenRepo = stolenRepo;
+        this.alertRepo = alertRepo;
+        this.ruleRepo = ruleRepo;
     }
 
-    @Override
-    public WarrantyClaimRecord create(WarrantyClaimRecord record) {
-        record.setCreatedAt(LocalDateTime.now());
-        record.setStatus("SUBMITTED");
-        return repo.save(record);
+    /**
+     * Submit a warranty claim.
+     *
+     * FLAGGED if:
+     *  - Duplicate claim (same serial + reason)
+     *  - Device is reported stolen
+     *  - Warranty is expired
+     */
+    public WarrantyClaimRecord submitClaim(WarrantyClaimRecord claim) {
+
+        DeviceOwnershipRecord device = deviceRepo
+                .findBySerialNumber(claim.getSerialNumber())
+                .orElseThrow(NoSuchElementException::new);
+
+        boolean duplicateClaim =
+                claimRepo.existsBySerialNumberAndClaimReason(
+                        claim.getSerialNumber(),
+                        claim.getClaimReason()
+                );
+
+        boolean stolenDevice =
+                stolenRepo.existsBySerialNumber(claim.getSerialNumber());
+
+        boolean warrantyExpired =
+                device.getWarrantyExpiration() != null &&
+                device.getWarrantyExpiration().isBefore(LocalDate.now());
+
+        if (duplicateClaim || stolenDevice || warrantyExpired) {
+            claim.setStatus("FLAGGED");
+        }
+
+        return claimRepo.save(claim);
     }
 
-    @Override
-    public WarrantyClaimRecord getById(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Claim not found"));
-    }
+    /**
+     * Update claim status (APPROVED / REJECTED / etc.)
+     */
+    public WarrantyClaimRecord updateClaimStatus(Long id, String status) {
 
-    @Override
-    public List<WarrantyClaimRecord> getBySerial(String serial) {
-        return repo.findBySerialNumber(serial);
-    }
+        WarrantyClaimRecord claim = claimRepo.findById(id)
+                .orElseThrow(NoSuchElementException::new);
 
-    @Override
-    public WarrantyClaimRecord updateStatus(Long id, String status) {
-        WarrantyClaimRecord claim = getById(id);
         claim.setStatus(status);
-        return repo.save(claim);
+        return claimRepo.save(claim);
     }
 
-    @Override
-    public List<WarrantyClaimRecord> getAll() {
-        return repo.findAll();
+    /**
+     * Get claim by ID
+     */
+    public Optional<WarrantyClaimRecord> getClaimById(Long id) {
+        return claimRepo.findById(id);
+    }
+
+    /**
+     * Get all claims
+     */
+    public List<WarrantyClaimRecord> getAllClaims() {
+        return claimRepo.findAll();
+    }
+
+    /**
+     * Get claims by device serial number
+     */
+    public List<WarrantyClaimRecord> getClaimsBySerial(String serialNumber) {
+        return claimRepo.findBySerialNumber(serialNumber);
     }
 }
