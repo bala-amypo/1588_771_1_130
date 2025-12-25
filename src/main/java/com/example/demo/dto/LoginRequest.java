@@ -1,11 +1,11 @@
 package com.example.demo.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class LoginRequest {
-    private String email;
+    private String username;
     private String password;
 }
