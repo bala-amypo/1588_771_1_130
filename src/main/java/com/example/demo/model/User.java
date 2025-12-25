@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -18,5 +17,4 @@ public class User {
     private String email;
     private String password;
     private String roles;
-    private LocalDateTime createdAt;
 }
