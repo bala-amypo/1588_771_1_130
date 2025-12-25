@@ -7,13 +7,19 @@ import java.util.Optional;
 
 public interface FraudRuleService {
 
-    FraudRule create(FraudRule rule);
+    /**
+     * Create a new fraud rule.
+     * Throws IllegalArgumentException if ruleCode already exists.
+     */
+    FraudRule createRule(FraudRule rule);
 
-    FraudRule update(Long id, FraudRule rule);
+    /**
+     * Get all active fraud rules
+     */
+    List<FraudRule> getActiveRules();
 
-    Optional<FraudRule> getById(Long id);
-
+    /**
+     * Get fraud rule by rule code
+     */
     Optional<FraudRule> getRuleByCode(String ruleCode);
-
-    List<FraudRule> getAll();
 }
