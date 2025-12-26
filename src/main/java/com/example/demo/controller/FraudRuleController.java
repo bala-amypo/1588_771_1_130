@@ -1,14 +1,13 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.FraudRule;
+import com.example.demo.model.FraudRuleRecord;
 import com.example.demo.service.FraudRuleService;
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/rules")
+@RequestMapping("/fraud-rules")
 public class FraudRuleController {
 
     private final FraudRuleService service;
@@ -17,22 +16,20 @@ public class FraudRuleController {
         this.service = service;
     }
 
-    /**
-     * Create a new fraud rule
-     * POST /rules
-     */
     @PostMapping
-    public FraudRule createRule(
-            @RequestBody FraudRule rule) {
-        return service.createRule(rule);
+    public FraudRuleRecord createRule(@RequestBody FraudRuleRecord rule) {
+        return service.saveRule(rule);
     }
 
-    /**
-     * Get all active fraud rules
-     * GET /rules/active
-     */
-    @GetMapping("/active")
-    public List<FraudRule> getActiveRules() {
-        return service.getActiveRules();
+    @GetMapping
+    public List<FraudRuleRecord> getAllRules() {
+        return service.getAllRules();
+    }
+
+    @PutMapping("/{id}")
+    public FraudRuleRecord updateRuleStatus(
+            @PathVariable Long id,
+            @RequestParam boolean active) {
+        return service.updateRuleStatus(id, active);
     }
 }
