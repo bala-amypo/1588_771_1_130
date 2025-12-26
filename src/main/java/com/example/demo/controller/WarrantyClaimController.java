@@ -1,44 +1,36 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.WarrantyClaim;
-import com.example.demo.service.WarrantyClaimService;
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.model.WarrantyClaimRecord;
+import com.example.demo.service.impl.WarrantyClaimServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/warranty-claims")
 public class WarrantyClaimController {
 
-    private final WarrantyClaimService service;
+    private final WarrantyClaimServiceImpl service;
 
-    // ✅ REQUIRED by TestNG
-    public WarrantyClaimController(WarrantyClaimService service) {
+    public WarrantyClaimController(WarrantyClaimServiceImpl service) {
         this.service = service;
     }
 
-    // -------- Optional endpoints (tests do NOT touch these) --------
-
-    @PostMapping
-    public WarrantyClaim createClaim(@RequestBody WarrantyClaim claim) {
-        return service.createClaim(claim);
+    public WarrantyClaimRecord submitClaim(WarrantyClaimRecord record) {
+        return service.submitClaim(record);
     }
 
-    @GetMapping("/{id}")
-    public Optional<WarrantyClaim> getClaimById(@PathVariable Long id) {
+    public WarrantyClaimRecord updateClaimStatus(Long id, String status) {
+        return service.updateClaimStatus(id, status);
+    }
+
+    public Optional<WarrantyClaimRecord> getClaimById(Long id) {
         return service.getClaimById(id);
     }
 
-    @GetMapping
-    public List<WarrantyClaim> getAllClaims() {
-        return service.getAllClaims();
+    public List<WarrantyClaimRecord> getClaimsBySerial(String serial) {
+        return service.getClaimsBySerial(serial);
     }
 
-    @PutMapping("/{id}/status")
-    public WarrantyClaim updateClaimStatus(
-            @PathVariable Long id,
-            @RequestParam String status) {
-        return service.updateClaimStatus(id, status);
+    public List<WarrantyClaimRecord> getAllClaims() {
+        return service.getAllClaims();
     }
 }
