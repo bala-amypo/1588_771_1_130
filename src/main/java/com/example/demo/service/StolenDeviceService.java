@@ -4,7 +4,7 @@ import com.example.demo.model.StolenDeviceReport;
 import java.util.List;
 
 public interface StolenDeviceService {
-    StolenDeviceReport reportStolen(StolenDeviceReport report);
-    List<StolenDeviceReport> getReportsBySerial(String serial);
+    StolenDeviceReport reportStolen(StolenDeviceReport r);
     List<StolenDeviceReport> getAllReports();
+    List<StolenDeviceReport> getReportsBySerial(String serial);
 }

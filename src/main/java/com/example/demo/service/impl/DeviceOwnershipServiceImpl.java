@@ -3,40 +3,37 @@ package com.example.demo.service.impl;
 import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.repository.DeviceOwnershipRecordRepository;
 import com.example.demo.service.DeviceOwnershipService;
-import org.springframework.stereotype.Service;
+import java.util.*;
 
-import java.util.List;
-import java.util.Optional;
-
-@Service
 public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
 
-    private final DeviceOwnershipRecordRepository repository;
+    private final DeviceOwnershipRecordRepository repo;
 
-    public DeviceOwnershipServiceImpl(DeviceOwnershipRecordRepository repository) {
-        this.repository = repository;
+    public DeviceOwnershipServiceImpl(DeviceOwnershipRecordRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord device) {
-        return repository.save(device);
+    public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord d) {
+        if (repo.existsBySerialNumber(d.getSerialNumber()))
+            throw new IllegalArgumentException();
+        return repo.save(d);
+    }
+
+    @Override
+    public Optional<DeviceOwnershipRecord> getBySerial(String serial) {
+        return repo.findBySerialNumber(serial);
     }
 
     @Override
     public List<DeviceOwnershipRecord> getAllDevices() {
-        return repository.findAll();
+        return repo.findAll();
     }
 
     @Override
-    public Optional<DeviceOwnershipRecord> getBySerial(String serialNumber) {
-        return repository.findBySerialNumber(serialNumber);
-    }
-
-    @Override
-    public DeviceOwnershipRecord updateDeviceStatus(Long id, Boolean status) {
-        DeviceOwnershipRecord record = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Device not found"));
-        record.setStatus(status);
-        return repository.save(record);
+    public DeviceOwnershipRecord updateDeviceStatus(Long id, boolean active) {
+        DeviceOwnershipRecord d = repo.findById(id).orElseThrow();
+        d.setActive(active);
+        return repo.save(d);
     }
 }

@@ -1,8 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.WarrantyClaimRecord;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public interface WarrantyClaimService {
     WarrantyClaimRecord submitClaim(WarrantyClaimRecord claim);
