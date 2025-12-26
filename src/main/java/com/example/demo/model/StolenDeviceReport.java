@@ -2,15 +2,14 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "stolen_device_reports")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class StolenDeviceReport {
 
     @Id
@@ -23,12 +22,12 @@ public class StolenDeviceReport {
     @Column(nullable = false)
     private String reportedBy;
 
-    private String details;
-
     private LocalDateTime reportDate;
 
+    private String details;
+
     @PrePersist
-    void onCreate() {
-        this.reportDate = LocalDateTime.now();
+    public void prePersist() {
+        if (reportDate == null) reportDate = LocalDateTime.now();
     }
 }

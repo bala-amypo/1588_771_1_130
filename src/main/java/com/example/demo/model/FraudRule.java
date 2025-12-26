@@ -2,15 +2,14 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "fraud_rules", uniqueConstraints = @UniqueConstraint(columnNames = "ruleCode"))
+@Table(name = "fraud_rules")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class FraudRule {
 
     @Id
@@ -25,16 +24,13 @@ public class FraudRule {
 
     private String description;
 
-    @Builder.Default
     private Boolean active = true;
 
     private LocalDateTime createdAt;
 
     @PrePersist
-    void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        if (active == null) {
-            active = true;
-        }
+    public void prePersist() {
+        if (active == null) active = true;
+        if (createdAt == null) createdAt = LocalDateTime.now();
     }
 }

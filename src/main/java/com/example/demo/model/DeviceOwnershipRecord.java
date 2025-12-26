@@ -2,16 +2,15 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "device_ownership_records", uniqueConstraints = @UniqueConstraint(columnNames = "serialNumber"))
+@Table(name = "device_ownership_records")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class DeviceOwnershipRecord {
 
     @Id
@@ -31,16 +30,13 @@ public class DeviceOwnershipRecord {
     @Column(nullable = false)
     private LocalDate warrantyExpiration;
 
-    @Builder.Default
     private Boolean active = true;
 
     private LocalDateTime createdAt;
 
     @PrePersist
-    void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        if (active == null) {
-            active = true;
-        }
+    public void prePersist() {
+        if (active == null) active = true;
+        if (createdAt == null) createdAt = LocalDateTime.now();
     }
 }
