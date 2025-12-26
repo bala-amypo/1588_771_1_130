@@ -15,9 +15,9 @@ public class FraudAlertRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String alertCode;
+    private String serialNumber;
 
-    private String description;
+    private String reason;
 
     private boolean resolved;
 }

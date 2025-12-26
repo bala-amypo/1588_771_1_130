@@ -1,4 +1,3 @@
-// 2️⃣ Repository
 package com.example.demo.repository;
 
 import com.example.demo.model.FraudAlertRecord;
@@ -9,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface FraudAlertRecordRepository extends JpaRepository<FraudAlertRecord, Long> {
-    List<FraudAlertRecord> findByResolved(boolean resolved);  // custom query example
+
+    List<FraudAlertRecord> findByResolved(boolean resolved);
 }
