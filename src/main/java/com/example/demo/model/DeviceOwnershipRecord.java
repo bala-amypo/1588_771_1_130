@@ -1,25 +1,25 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
 import lombok.*;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "device_ownership")
-@Data                   // generates getters, setters, toString, equals, hashcode
-@NoArgsConstructor       // no-args constructor
-@AllArgsConstructor      // all-args constructor
-@Builder                 // builder pattern
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeviceOwnershipRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String serialNumber;
 
-    private Boolean status;
-
-    private LocalDate warrantyExpiration; // ← needed for test cases
+    private String ownerName;
+    private String ownerEmail;
+    private LocalDate warrantyExpiration;
+    private Boolean active = true;
 }

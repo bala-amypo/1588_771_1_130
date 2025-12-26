@@ -1,23 +1,23 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "fraud_rule")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class FraudRuleRecord {
+public class FraudRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String ruleName;
+    @Column(unique = true)
+    private String ruleCode;
 
+    private String ruleType;
     private String description;
-
-    private boolean active;
+    private Boolean active = true;
 }
