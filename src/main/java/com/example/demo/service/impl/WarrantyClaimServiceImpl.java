@@ -2,13 +2,16 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
-import com.example.demo.service.WarrantyClaimService;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 
 @Service
 public class WarrantyClaimServiceImpl {
-
     private final WarrantyClaimRecordRepository repo;
     private final DeviceOwnershipRecordRepository deviceRepo;
     private final StolenDeviceReportRepository stolenRepo;

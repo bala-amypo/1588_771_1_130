@@ -2,8 +2,10 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.FraudAlertRecord;
 import com.example.demo.repository.FraudAlertRecordRepository;
-import com.example.demo.service.FraudAlertService;
-import java.util.*;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class FraudAlertServiceImpl {
