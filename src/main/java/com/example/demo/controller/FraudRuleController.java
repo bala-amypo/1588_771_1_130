@@ -2,13 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.model.FraudRule;
 import com.example.demo.service.FraudRuleService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/fraud/rules")
+@RequestMapping("/api/fraud-rules")
 public class FraudRuleController {
 
     private final FraudRuleService service;
@@ -17,28 +17,36 @@ public class FraudRuleController {
         this.service = service;
     }
 
-    @PostMapping("/create")
-    public FraudRule createRule(@RequestBody FraudRule rule) {
-        return service.createRule(rule);
+    @PostMapping("/")
+    public ResponseEntity<FraudRule> create(@RequestBody FraudRule rule) {
+        return ResponseEntity.ok(service.createRule(rule));
     }
 
-    @PutMapping("/{id}/update")
-    public FraudRule updateRule(@PathVariable Long id, @RequestBody FraudRule rule) {
-        return service.updateRule(id, rule);
+    @GetMapping("/")
+    public ResponseEntity<List<FraudRule>> getAll() {
+        return ResponseEntity.ok(service.getAllRules());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FraudRule> getById(@PathVariable Long id) {
+        return service.getAllRules().stream().filter(r -> r.getId().equals(id))
+                .findFirst().map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/active")
-    public List<FraudRule> getActiveRules() {
-        return service.getActiveRules();
+    public ResponseEntity<List<FraudRule>> getActive() {
+        return ResponseEntity.ok(service.getActiveRules());
     }
 
-    @GetMapping("/{ruleCode}")
-    public Optional<FraudRule> getRule(@PathVariable String ruleCode) {
-        return service.getRuleByCode(ruleCode);
+    @PutMapping("/{id}")
+    public ResponseEntity<FraudRule> update(@PathVariable Long id, @RequestBody FraudRule rule) {
+        return ResponseEntity.ok(service.updateRule(id, rule));
     }
 
-    @GetMapping("/all")
-    public List<FraudRule> getAllRules() {
-        return service.getAllRules();
+    @GetMapping("/code/{ruleCode}")
+    public ResponseEntity<FraudRule> getByCode(@PathVariable String ruleCode) {
+        return service.getRuleByCode(ruleCode)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
