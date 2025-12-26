@@ -1,35 +1,50 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthResponse;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import com.example.demo.security.JwtTokenProvider;
-import org.springframework.http.ResponseEntity;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserService userService;
-    private final JwtTokenProvider tokenProvider;
 
-    public AuthController(UserService userService, JwtTokenProvider tokenProvider) {
+    @Autowired
+    public AuthController(UserService userService) {
         this.userService = userService;
-        this.tokenProvider = tokenProvider;
     }
 
+    // Register new user
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody User user) {
-        User u = userService.register(user);
-        String token = tokenProvider.createToken(u.getId(), u.getEmail(), u.getRoles());
-        return ResponseEntity.ok(new AuthResponse(token, u.getId(), u.getEmail(), u.getRoles()));
+    public AuthResponse register(@RequestBody AuthRequest request) {
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRoles(request.getRoles());
+        User registeredUser = userService.register(user);
+        return new AuthResponse(
+                registeredUser.getEmail(),
+                registeredUser.getId(),
+                null,
+                registeredUser.getRoles()
+        );
     }
 
+    // Authenticate existing user
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody User user) {
-        User u = userService.authenticate(user.getEmail(), user.getPassword());
-        String token = tokenProvider.createToken(u.getId(), u.getEmail(), u.getRoles());
-        return ResponseEntity.ok(new AuthResponse(token, u.getId(), u.getEmail(), u.getRoles()));
+    public AuthResponse login(@RequestBody AuthRequest request) {
+        User user = userService.authenticate(request.getEmail(), request.getPassword());
+        return new AuthResponse(
+                user.getEmail(),
+                user.getId(),
+                null,
+                user.getRoles()
+        );
     }
 }
