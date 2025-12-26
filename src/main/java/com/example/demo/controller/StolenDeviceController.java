@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/stolen-devices")
-@ServiceRequirement(name="bearerAuth")
+@SecurityRequirement(name="bearerAuth")
 public class StolenDeviceController {
     
     private final StolenDeviceService stolenDeviceService;

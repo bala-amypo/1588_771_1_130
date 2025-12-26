@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/fraud-alerts")
-@ServiceRequirement(name="bearerAuth")
+@SecurityRequirement(name="bearerAuth")
 public class FraudAlertController {
     
     private final FraudAlertService service;

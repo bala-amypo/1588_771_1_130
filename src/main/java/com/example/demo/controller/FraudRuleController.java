@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/fraud-rules")
-@ServiceRequirement(name="bearerAuth")
+@SecurityRequirement(name="bearerAuth")
 public class FraudRuleController {
     
     private final FraudRuleService fraudRuleService;
