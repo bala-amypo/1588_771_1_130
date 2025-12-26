@@ -1,28 +1,47 @@
-package com.example.demo.controller;
+package com.example.demo.model;
 
-import com.example.demo.model.FraudAlertRecord;
-import com.example.demo.service.FraudAlertService;
-import org.springframework.web.bind.annotation.*;
+import jakarta.persistence.*;
 
-import java.util.List;
+@Entity
+@Table(name = "fraud_alerts")
+public class FraudAlertRecord {
 
-@RestController
-@RequestMapping("/api/fraud-alerts")
-public class FraudAlertController {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private final FraudAlertService service;
+    private String alertType;
+    private String description;
+    private String status;
 
-    public FraudAlertController(FraudAlertService service) {
-        this.service = service;
+    public FraudAlertRecord() {
     }
 
-    @PostMapping
-    public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord record) {
-        return service.createAlert(record);
+    public Long getId() {
+        return id;
     }
 
-    @GetMapping
-    public List<FraudAlertRecord> getAllAlerts() {
-        return service.getAllAlerts();
+    public String getAlertType() {
+        return alertType;
+    }
+
+    public void setAlertType(String alertType) {
+        this.alertType = alertType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
