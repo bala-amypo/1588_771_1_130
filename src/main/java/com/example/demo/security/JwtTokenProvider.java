@@ -11,21 +11,10 @@ import java.util.Set;
 @Component
 public class JwtTokenProvider {
 
-    private final String jwtSecret = "mySecretKey"; // use secure key in production
+    private final String jwtSecret = "mySecretKey"; // use a secure key in production
     private final long jwtExpirationMs = 86400000; // 1 day
 
-    // Existing method (optional)
-    public String generateToken(String email, Set<String> roles) {
-        return Jwts.builder()
-                .setSubject(email)
-                .claim("roles", roles)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
-    }
-
-    // Add this method to match AuthController usage
+    // For AuthController usage
     public String createToken(Long userId, String email, Set<String> roles) {
         return Jwts.builder()
                 .setId(String.valueOf(userId))
