@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Autowired
-    private UserServiceImpl userService; // must implement UserDetailsService
+    private UserServiceImpl userService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -27,25 +27,19 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authBuilder = 
-            http.getSharedObject(AuthenticationManagerBuilder.class);
-
-        authBuilder.userDetailsService(userService)
-                   .passwordEncoder(passwordEncoder);
-
-        return authBuilder.build();
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userService)
+                .passwordEncoder(passwordEncoder)
+                .and()
+                .build();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .httpBasic();
-
+        http.csrf().disable()
+            .authorizeHttpRequests()
+            .requestMatchers("/api/auth/**").permitAll()
+            .anyRequest().authenticated();
         return http.build();
     }
 }
