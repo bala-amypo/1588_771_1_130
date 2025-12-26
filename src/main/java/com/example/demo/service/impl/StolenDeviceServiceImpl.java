@@ -1,46 +1,46 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.StolenDeviceReport;
-import com.example.demo.repository.DeviceOwnershipRecordRepository;
 import com.example.demo.repository.StolenDeviceReportRepository;
 import com.example.demo.service.StolenDeviceService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@Service
 public class StolenDeviceServiceImpl implements StolenDeviceService {
 
     private final StolenDeviceReportRepository stolenRepo;
-    private final DeviceOwnershipRecordRepository deviceRepo;
 
-    public StolenDeviceServiceImpl(
-            StolenDeviceReportRepository stolenRepo,
-            DeviceOwnershipRecordRepository deviceRepo
-    ) {
+    public StolenDeviceServiceImpl(StolenDeviceReportRepository stolenRepo) {
         this.stolenRepo = stolenRepo;
-        this.deviceRepo = deviceRepo;
     }
 
     @Override
-    public StolenDeviceReport reportStolen(StolenDeviceReport report) {
-        deviceRepo.findBySerialNumber(report.getSerialNumber())
-                .orElseThrow(() -> new NoSuchElementException("Device not found"));
+    public StolenDeviceReport reportDevice(StolenDeviceReport report) {
+        if (stolenRepo.existsBySerialNumber(report.getSerialNumber())) {
+            throw new IllegalArgumentException("Device already reported as stolen");
+        }
         return stolenRepo.save(report);
     }
 
     @Override
-    public List<StolenDeviceReport> getReportsBySerial(String serialNumber) {
+    public Optional<StolenDeviceReport> getBySerial(String serialNumber) {
         return stolenRepo.findBySerialNumber(serialNumber);
-    }
-
-    @Override
-    public Optional<StolenDeviceReport> getReportById(Long id) {
-        return stolenRepo.findById(id);
     }
 
     @Override
     public List<StolenDeviceReport> getAllReports() {
         return stolenRepo.findAll();
+    }
+
+    @Override
+    public void removeReport(Long id) {
+        if (!stolenRepo.existsById(id)) {
+            throw new NoSuchElementException("Report not found");
+        }
+        stolenRepo.deleteById(id);
     }
 }
