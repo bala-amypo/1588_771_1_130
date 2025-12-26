@@ -1,22 +1,15 @@
 package com.example.demo.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
 public class AuthResponse {
     private String email;
     private Long id;
-    private String token; // you can implement JWT later
+    private String token; // optional, just placeholder
     private Set<String> roles;
-
-    public AuthResponse(String email, Long id, String token, Set<String> roles) {
-        this.email = email;
-        this.id = id;
-        this.token = token;
-        this.roles = roles;
-    }
-
-    public String getEmail() { return email; }
-    public Long getId() { return id; }
-    public String getToken() { return token; }
-    public Set<String> getRoles() { return roles; }
 }

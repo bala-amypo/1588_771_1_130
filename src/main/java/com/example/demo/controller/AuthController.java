@@ -1,15 +1,27 @@
-package com.example.demo.dto;
+package com.example.demo.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.example.demo.dto.AuthResponse;
+import com.example.demo.model.User;
+import com.example.demo.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class AuthController {
 
-@Data
-@AllArgsConstructor
-public class AuthResponse {
-    private String email;
-    private Long id;
-    private String token; // optional, just placeholder
-    private Set<String> roles;
+    private final UserService userService;
+
+    @PostMapping("/register")
+    public AuthResponse register(@RequestBody User user) {
+        User saved = userService.register(user);
+        return new AuthResponse(saved.getEmail(), saved.getId(), "dummy-token", saved.getRoles());
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody User user) {
+        User authenticated = userService.authenticate(user.getEmail(), user.getPassword());
+        return new AuthResponse(authenticated.getEmail(), authenticated.getId(), "dummy-token", authenticated.getRoles());
+    }
 }
