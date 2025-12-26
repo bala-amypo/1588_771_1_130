@@ -1,9 +1,11 @@
 package com.example.demo.dto;
-
-import lombok.Data;
+import lombok.*;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterRequest {
     private String name;
     private String email;

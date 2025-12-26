@@ -1,28 +1,38 @@
 package com.example.demo.model;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
-@Builder
+@Table(name = "users")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Builder
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
 
     @Column(unique = true)
     private String email;
 
     private String password;
-    private String name;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (roles.isEmpty()) roles.add("USER");
+    }
 }
