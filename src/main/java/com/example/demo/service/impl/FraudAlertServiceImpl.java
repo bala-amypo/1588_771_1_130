@@ -22,19 +22,20 @@ public class FraudAlertServiceImpl implements FraudAlertService {
     }
 
     @Override
-    public List<FraudAlertRecord> getResolvedAlerts(boolean resolved) {
-        return repository.findAll().stream().filter(a -> a.isResolved() == resolved).toList();
-    }
-
-    @Override
-    public void updateAlertStatus(Long id, boolean resolved) {
-        FraudAlertRecord alert = repository.findById(id).orElseThrow();
-        alert.setResolved(resolved);
-        repository.save(alert);
-    }
-
-    @Override
     public List<FraudAlertRecord> getAllAlerts() {
         return repository.findAll();
+    }
+
+    @Override
+    public List<FraudAlertRecord> getResolvedAlerts(boolean resolved) {
+        return repository.findByResolved(resolved);
+    }
+
+    @Override
+    public FraudAlertRecord updateAlertStatus(Long id, boolean resolved) {
+        FraudAlertRecord alert = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Alert not found"));
+        alert.setResolved(resolved);
+        return repository.save(alert);
     }
 }

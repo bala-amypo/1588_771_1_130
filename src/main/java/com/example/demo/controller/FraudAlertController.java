@@ -1,19 +1,20 @@
-// 5️⃣ Controller
 package com.example.demo.controller;
 
 import com.example.demo.model.FraudAlertRecord;
 import com.example.demo.service.FraudAlertService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/fraud-alerts")
-@RequiredArgsConstructor
+@RequestMapping("/fraud-alerts")
 public class FraudAlertController {
 
     private final FraudAlertService service;
+
+    public FraudAlertController(FraudAlertService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord alert) {
@@ -25,13 +26,15 @@ public class FraudAlertController {
         return service.getAllAlerts();
     }
 
-    @GetMapping("/resolved")
-    public List<FraudAlertRecord> getResolvedAlerts(@RequestParam boolean resolved) {
-        return service.getResolvedAlerts(resolved);
+    @GetMapping("/resolved/{status}")
+    public List<FraudAlertRecord> getResolvedAlerts(@PathVariable boolean status) {
+        return service.getResolvedAlerts(status);
     }
 
-    @PutMapping("/{id}/status")
-    public FraudAlertRecord updateStatus(@PathVariable Long id, @RequestParam boolean resolved) {
+    @PutMapping("/{id}")
+    public FraudAlertRecord updateAlertStatus(
+            @PathVariable Long id,
+            @RequestParam boolean resolved) {
         return service.updateAlertStatus(id, resolved);
     }
 }
