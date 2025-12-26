@@ -19,9 +19,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
     private final JwtTokenProvider jwt;
 
-    public UserServiceImpl(UserRepository repo,
-                           PasswordEncoder encoder,
-                           JwtTokenProvider jwt) {
+    public UserServiceImpl(UserRepository repo, PasswordEncoder encoder, JwtTokenProvider jwt) {
         this.repo = repo;
         this.encoder = encoder;
         this.jwt = jwt;
@@ -32,14 +30,9 @@ public class UserServiceImpl implements UserService {
         if (repo.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already in use");
         }
-
-        User user = new User(
-                request.getName(),
-                request.getEmail(),
+        User user = new User(null, request.getName(), request.getEmail(),
                 encoder.encode(request.getPassword()),
-                request.getRoles() == null ? new HashSet<>() : request.getRoles()
-        );
-
+                request.getRoles() == null ? new HashSet<>() : request.getRoles());
         return repo.save(user);
     }
 
@@ -47,23 +40,9 @@ public class UserServiceImpl implements UserService {
     public User loginUser(LoginRequest request) {
         User user = repo.findByEmail(request.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
-
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid input");
+            throw new IllegalArgumentException("Invalid password");
         }
-
         return user;
-    }
-
-    @Override
-    public User getById(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User not found"));
-    }
-
-    @Override
-    public User findByEmail(String email) {
-        return repo.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("User not found"));
     }
 }

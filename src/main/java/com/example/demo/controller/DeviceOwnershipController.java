@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.service.DeviceOwnershipService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/devices")
-@Tag(name = "Device", description = "Device ownership management")
 public class DeviceOwnershipController {
 
     private final DeviceOwnershipService service;
@@ -19,28 +17,28 @@ public class DeviceOwnershipController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<DeviceOwnershipRecord> register(@RequestBody DeviceOwnershipRecord device) {
-        return ResponseEntity.ok(service.registerDevice(device));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<DeviceOwnershipRecord>> getAll() {
-        return ResponseEntity.ok(service.getAllDevices());
+    @PostMapping("/register")
+    public ResponseEntity<DeviceOwnershipRecord> registerDevice(@RequestBody DeviceOwnershipRecord record) {
+        DeviceOwnershipRecord saved = service.registerDevice(record);
+        return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DeviceOwnershipRecord> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getById(id));
+        return service.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/serial/{serialNumber}")
-    public ResponseEntity<DeviceOwnershipRecord> getBySerial(@PathVariable String serialNumber) {
-        return ResponseEntity.ok(service.getBySerial(serialNumber));
+    @GetMapping("/serial/{serial}")
+    public ResponseEntity<DeviceOwnershipRecord> getBySerial(@PathVariable String serial) {
+        return service.getBySerial(serial)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}/status")
-    public ResponseEntity<DeviceOwnershipRecord> updateStatus(@PathVariable Long id, @RequestParam boolean active) {
-        return ResponseEntity.ok(service.updateDeviceStatus(id, active));
+    @GetMapping
+    public List<DeviceOwnershipRecord> getAllDevices() {
+        return service.getAllDevices();
     }
 }
