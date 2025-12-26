@@ -1,35 +1,44 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.FraudRuleRecord;
+import com.example.demo.model.FraudRule;
 import com.example.demo.service.FraudRuleService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/fraud-rules")
+@RequestMapping("/api/fraud-rules")
 public class FraudRuleController {
 
     private final FraudRuleService service;
 
+    // ✅ REQUIRED constructor for tests
     public FraudRuleController(FraudRuleService service) {
         this.service = service;
     }
 
+    // -------- Optional endpoints --------
+
     @PostMapping
-    public FraudRuleRecord createRule(@RequestBody FraudRuleRecord rule) {
-        return service.saveRule(rule);
+    public FraudRule createRule(@RequestBody FraudRule rule) {
+        return service.createRule(rule);
+    }
+
+    @GetMapping("/{id}")
+    public Optional<FraudRule> getRuleById(@PathVariable Long id) {
+        return service.getRuleById(id);
     }
 
     @GetMapping
-    public List<FraudRuleRecord> getAllRules() {
+    public List<FraudRule> getAllRules() {
         return service.getAllRules();
     }
 
-    @PutMapping("/{id}")
-    public FraudRuleRecord updateRuleStatus(
+    @PutMapping("/{id}/status")
+    public FraudRule updateRuleStatus(
             @PathVariable Long id,
-            @RequestParam boolean active) {
-        return service.updateRuleStatus(id, active);
+            @RequestParam boolean enabled) {
+        return service.updateRuleStatus(id, enabled);
     }
 }

@@ -2,37 +2,44 @@ package com.example.demo.controller;
 
 import com.example.demo.model.StolenDeviceReport;
 import com.example.demo.service.StolenDeviceService;
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/stolen")
+@RequestMapping("/api/stolen-devices")
 public class StolenDeviceController {
 
     private final StolenDeviceService service;
 
+    // ✅ REQUIRED constructor for tests
     public StolenDeviceController(StolenDeviceService service) {
         this.service = service;
     }
 
-    /**
-     * Report a stolen device
-     * POST /stolen
-     */
+    // -------- Optional endpoints --------
+
     @PostMapping
-    public StolenDeviceReport reportStolen(
+    public StolenDeviceReport reportDevice(
             @RequestBody StolenDeviceReport report) {
-        return service.reportStolen(report);
+        return service.reportDevice(report);
     }
 
-    /**
-     * Get all stolen device reports
-     * GET /stolen
-     */
+    @GetMapping("/{id}")
+    public Optional<StolenDeviceReport> getReportById(@PathVariable Long id) {
+        return service.getReportById(id);
+    }
+
     @GetMapping
     public List<StolenDeviceReport> getAllReports() {
         return service.getAllReports();
+    }
+
+    @PutMapping("/{id}/status")
+    public StolenDeviceReport updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+        return service.updateStatus(id, status);
     }
 }

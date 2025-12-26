@@ -1,40 +1,44 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.FraudAlertRecord;
+import com.example.demo.model.FraudAlert;
 import com.example.demo.service.FraudAlertService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/fraud-alerts")
+@RequestMapping("/api/fraud-alerts")
 public class FraudAlertController {
 
     private final FraudAlertService service;
 
+    // ✅ REQUIRED constructor for tests
     public FraudAlertController(FraudAlertService service) {
         this.service = service;
     }
 
+    // -------- Optional endpoints --------
+
     @PostMapping
-    public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord alert) {
-        return service.saveAlert(alert);
+    public FraudAlert createAlert(@RequestBody FraudAlert alert) {
+        return service.createAlert(alert);
+    }
+
+    @GetMapping("/{id}")
+    public Optional<FraudAlert> getAlertById(@PathVariable Long id) {
+        return service.getAlertById(id);
     }
 
     @GetMapping
-    public List<FraudAlertRecord> getAllAlerts() {
+    public List<FraudAlert> getAllAlerts() {
         return service.getAllAlerts();
     }
 
-    @GetMapping("/resolved/{status}")
-    public List<FraudAlertRecord> getResolvedAlerts(@PathVariable boolean status) {
-        return service.getResolvedAlerts(status);
-    }
-
-    @PutMapping("/{id}")
-    public FraudAlertRecord updateAlertStatus(
+    @PutMapping("/{id}/status")
+    public FraudAlert updateAlertStatus(
             @PathVariable Long id,
-            @RequestParam boolean resolved) {
-        return service.updateAlertStatus(id, resolved);
+            @RequestParam String status) {
+        return service.updateAlertStatus(id, status);
     }
 }
