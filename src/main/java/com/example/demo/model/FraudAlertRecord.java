@@ -1,24 +1,28 @@
-package com.example.demo.model;
+package com.example.demo.controller;
 
-import jakarta.persistence.*;
-import lombok.*;
+import com.example.demo.model.FraudAlertRecord;
+import com.example.demo.service.FraudAlertService;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.util.List;
 
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class FraudAlertRecord {
+@RestController
+@RequestMapping("/api/fraud-alerts")
+public class FraudAlertController {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final FraudAlertService service;
 
-    private String deviceId;   // ✅ This must match repository method
+    public FraudAlertController(FraudAlertService service) {
+        this.service = service;
+    }
 
-    private String alertType;
+    @PostMapping
+    public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord record) {
+        return service.createAlert(record);
+    }
 
-    private Date alertTime;
+    @GetMapping
+    public List<FraudAlertRecord> getAllAlerts() {
+        return service.getAllAlerts();
+    }
 }

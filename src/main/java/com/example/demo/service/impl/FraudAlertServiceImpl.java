@@ -17,7 +17,12 @@ public class FraudAlertServiceImpl implements FraudAlertService {
     }
 
     @Override
-    public List<FraudAlertRecord> getAlertsByDeviceId(String deviceId) {
-        return repository.findByDeviceId(deviceId);
+    public FraudAlertRecord createAlert(FraudAlertRecord record) {
+        return repository.save(record);
+    }
+
+    @Override
+    public List<FraudAlertRecord> getAllAlerts() {
+        return repository.findAll();
     }
 }
