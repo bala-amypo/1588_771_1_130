@@ -9,6 +9,7 @@ import com.example.demo.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 
@@ -30,9 +31,14 @@ public class UserServiceImpl implements UserService {
         if (repo.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already in use");
         }
-        User user = new User(null, request.getName(), request.getEmail(),
+        User user = new User(
+                null, // id will be generated
+                request.getName(),
+                request.getEmail(),
                 encoder.encode(request.getPassword()),
-                request.getRoles() == null ? new HashSet<>() : request.getRoles());
+                request.getRoles() == null ? new HashSet<>() : request.getRoles(),
+                LocalDateTime.now() // ✅ createdAt field
+        );
         return repo.save(user);
     }
 
