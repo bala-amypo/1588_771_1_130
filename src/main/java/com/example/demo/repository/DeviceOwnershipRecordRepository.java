@@ -1,12 +1,10 @@
-// Correct version
 package com.example.demo.repository;
 
-import com.example.demo.model.DeviceOwnershipRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import java.util.Optional;
+import com.example.demo.model.*;
+import java.util.*;
 
-@Repository
 public interface DeviceOwnershipRecordRepository extends JpaRepository<DeviceOwnershipRecord, Long> {
     Optional<DeviceOwnershipRecord> findBySerialNumber(String serialNumber);
+    boolean existsBySerialNumber(String serialNumber);
 }
