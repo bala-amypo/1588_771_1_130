@@ -1,46 +1,34 @@
 package com.example.demo.security;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
-
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
-import java.util.Set;
 
-@Component
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class JwtAuthenticationFilter implements Filter {
 
-    private final JwtTokenProvider tokenProvider;
-    private final CustomUserDetailsService userDetailsService;
+    private final JwtTokenProvider provider;
+    private final CustomUserDetailsService uds;
 
-    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider, CustomUserDetailsService userDetailsService) {
-        this.tokenProvider = tokenProvider;
-        this.userDetailsService = userDetailsService;
+    public JwtAuthenticationFilter(JwtTokenProvider p, CustomUserDetailsService u) {
+        this.provider = p;
+        this.uds = u;
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilter(
+            ServletRequest req,
+            ServletResponse res,
+            FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest req = (HttpServletRequest) request;
-        String header = req.getHeader("Authorization");
+        HttpServletRequest r = (HttpServletRequest) req;
+        String h = r.getHeader("Authorization");
 
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
-            if (tokenProvider.validateToken(token)) {
-                String email = tokenProvider.getEmail(token);
-                Set<String> roles = tokenProvider.getRoles(token);
-                // You can set user info in request/session if needed
-                req.setAttribute("email", email);
-                req.setAttribute("roles", roles);
-            }
+        if (h != null && h.startsWith("Bearer ")) {
+            String token = h.substring(7);
+            provider.validateToken(token);
         }
 
-        chain.doFilter(request, response);
+        chain.doFilter(req, res);
     }
 }

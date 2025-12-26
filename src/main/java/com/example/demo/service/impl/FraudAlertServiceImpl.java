@@ -3,39 +3,30 @@ package com.example.demo.service.impl;
 import com.example.demo.model.FraudAlertRecord;
 import com.example.demo.repository.FraudAlertRecordRepository;
 import com.example.demo.service.FraudAlertService;
-import org.springframework.stereotype.Service;
+import java.util.*;
 
-import java.util.List;
-
-@Service
 public class FraudAlertServiceImpl implements FraudAlertService {
 
-    private final FraudAlertRecordRepository repository;
+    private final FraudAlertRecordRepository repo;
 
-    public FraudAlertServiceImpl(FraudAlertRecordRepository repository) {
-        this.repository = repository;
+    public FraudAlertServiceImpl(FraudAlertRecordRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public FraudAlertRecord saveAlert(FraudAlertRecord alert) {
-        return repository.save(alert);
+    public FraudAlertRecord createAlert(FraudAlertRecord a) {
+        return repo.save(a);
     }
 
     @Override
-    public List<FraudAlertRecord> getAllAlerts() {
-        return repository.findAll();
+    public FraudAlertRecord resolveAlert(Long id) {
+        FraudAlertRecord f = repo.findById(id).orElseThrow();
+        f.setResolved(true);
+        return repo.save(f);
     }
 
     @Override
-    public List<FraudAlertRecord> getResolvedAlerts(boolean resolved) {
-        return repository.findByResolved(resolved);
-    }
-
-    @Override
-    public FraudAlertRecord updateAlertStatus(Long id, boolean resolved) {
-        FraudAlertRecord alert = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Alert not found"));
-        alert.setResolved(resolved);
-        return repository.save(alert);
+    public List<FraudAlertRecord> getAlertsByClaim(Long claimId) {
+        return repo.findByClaimId(claimId);
     }
 }
