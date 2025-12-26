@@ -1,31 +1,46 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "warranty_claims")
+@Table(name = "warranty_claim_records")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class WarrantyClaimRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ✅ REQUIRED because repository uses findByClaimId()
-    private String claimId;
+    @Column(nullable = false)
+    private String serialNumber;
 
-    private String deviceId;
+    @Column(nullable = false)
+    private String claimantName;
 
-    private String status;
+    private String claimantEmail;
+
+    @Column(nullable = false)
+    private String claimReason;
+
+    @Builder.Default
+    private String status = "PENDING";
+
+    private LocalDateTime submittedAt;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    void onCreate() {
+        this.submittedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        if (status == null) {
+            status = "PENDING";
+        }
+    }
 }
