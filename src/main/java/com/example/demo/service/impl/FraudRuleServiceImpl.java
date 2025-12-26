@@ -5,6 +5,7 @@ import com.example.demo.repository.FraudRuleRepository;
 import com.example.demo.service.FraudRuleService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -23,17 +24,19 @@ public class FraudRuleServiceImpl implements FraudRuleService {
         if (repo.findByRuleCode(rule.getRuleCode()).isPresent()) {
             throw new IllegalArgumentException("Rule already exists");
         }
+        rule.setCreatedAt(LocalDateTime.now());
+        if (rule.getActive() == null) rule.setActive(true);
         return repo.save(rule);
     }
 
     @Override
-    public FraudRule updateRule(Long id, FraudRule updated) {
-        FraudRule r = repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Match not found"));
-        r.setRuleType(updated.getRuleType());
-        r.setDescription(updated.getDescription());
-        r.setActive(updated.isActive());
-        return repo.save(r);
+    public FraudRule updateRule(Long id, FraudRule updatedRule) {
+        FraudRule rule = repo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
+        rule.setDescription(updatedRule.getDescription());
+        rule.setRuleType(updatedRule.getRuleType());
+        rule.setActive(updatedRule.getActive());
+        return repo.save(rule);
     }
 
     @Override
@@ -42,12 +45,16 @@ public class FraudRuleServiceImpl implements FraudRuleService {
     }
 
     @Override
-    public Optional<FraudRule> getRuleByCode(String code) {
-        return repo.findByRuleCode(code);
+    public Optional<FraudRule> getRuleByCode(String ruleCode) {
+        return repo.findByRuleCode(ruleCode);
     }
 
     @Override
     public List<FraudRule> getAllRules() {
         return repo.findAll();
+    }
+
+    public Optional<FraudRule> getRuleById(Long id) {
+        return repo.findById(id);
     }
 }

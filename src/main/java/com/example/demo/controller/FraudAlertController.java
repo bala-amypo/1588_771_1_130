@@ -1,31 +1,51 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.FraudAlertRecord;
-import com.example.demo.service.impl.FraudAlertServiceImpl;
+import com.example.demo.service.FraudAlertService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/fraud-alerts")
+@Tag(name = "FraudAlert", description = "Fraud alert management")
 public class FraudAlertController {
 
-    private final FraudAlertServiceImpl service;
+    private final FraudAlertService service;
 
-    public FraudAlertController(FraudAlertServiceImpl service) {
+    public FraudAlertController(FraudAlertService service) {
         this.service = service;
     }
 
-    public FraudAlertRecord createAlert(FraudAlertRecord record) {
-        return service.createAlert(record);
+    @PostMapping
+    public ResponseEntity<FraudAlertRecord> create(@RequestBody FraudAlertRecord alert) {
+        return ResponseEntity.ok(service.createAlert(alert));
     }
 
-    public FraudAlertRecord resolveAlert(Long id) {
-        return service.resolveAlert(id);
+    @GetMapping
+    public ResponseEntity<List<FraudAlertRecord>> getAll() {
+        return ResponseEntity.ok(service.getAllAlerts());
     }
 
-    public List<FraudAlertRecord> getAlertsByClaim(Long claimId) {
-        return service.getAlertsByClaim(claimId);
+    @GetMapping("/{id}")
+    public ResponseEntity<FraudAlertRecord> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getAlertById(id).orElseThrow());
     }
 
-    public List<FraudAlertRecord> getAllAlerts() {
-        return service.getAllAlerts();
+    @GetMapping("/serial/{serialNumber}")
+    public ResponseEntity<List<FraudAlertRecord>> getBySerial(@PathVariable String serialNumber) {
+        return ResponseEntity.ok(service.getAlertsBySerial(serialNumber));
+    }
+
+    @GetMapping("/claim/{claimId}")
+    public ResponseEntity<List<FraudAlertRecord>> getByClaim(@PathVariable Long claimId) {
+        return ResponseEntity.ok(service.getAlertsByClaim(claimId));
+    }
+
+    @PutMapping("/{id}/resolve")
+    public ResponseEntity<FraudAlertRecord> resolve(@PathVariable Long id) {
+        return ResponseEntity.ok(service.resolveAlert(id));
     }
 }

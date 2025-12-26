@@ -2,43 +2,45 @@ package com.example.demo.controller;
 
 import com.example.demo.model.FraudRule;
 import com.example.demo.service.FraudRuleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/fraud-rules")
+@Tag(name = "FraudRule", description = "Fraud rule management")
 public class FraudRuleController {
 
     private final FraudRuleService service;
 
-    // ✅ REQUIRED constructor for tests
     public FraudRuleController(FraudRuleService service) {
         this.service = service;
     }
 
-    // -------- Optional endpoints --------
-
     @PostMapping
-    public FraudRule createRule(@RequestBody FraudRule rule) {
-        return service.createRule(rule);
-    }
-
-    @GetMapping("/{id}")
-    public Optional<FraudRule> getRuleById(@PathVariable Long id) {
-        return service.getRuleById(id);
+    public ResponseEntity<FraudRule> create(@RequestBody FraudRule rule) {
+        return ResponseEntity.ok(service.createRule(rule));
     }
 
     @GetMapping
-    public List<FraudRule> getAllRules() {
-        return service.getAllRules();
+    public ResponseEntity<List<FraudRule>> getAll() {
+        return ResponseEntity.ok(service.getAllRules());
     }
 
-    @PutMapping("/{id}/status")
-    public FraudRule updateRuleStatus(
-            @PathVariable Long id,
-            @RequestParam boolean enabled) {
-        return service.updateRuleStatus(id, enabled);
+    @GetMapping("/{id}")
+    public ResponseEntity<FraudRule> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getRuleById(id).orElseThrow());
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<FraudRule>> getActive() {
+        return ResponseEntity.ok(service.getActiveRules());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<FraudRule> update(@PathVariable Long id, @RequestBody FraudRule rule) {
+        return ResponseEntity.ok(service.updateRule(id, rule));
     }
 }

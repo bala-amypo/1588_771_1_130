@@ -5,8 +5,10 @@ import com.example.demo.repository.FraudAlertRecordRepository;
 import com.example.demo.service.FraudAlertService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class FraudAlertServiceImpl implements FraudAlertService {
@@ -19,20 +21,27 @@ public class FraudAlertServiceImpl implements FraudAlertService {
 
     @Override
     public FraudAlertRecord createAlert(FraudAlertRecord alert) {
+        alert.setAlertDate(LocalDateTime.now());
+        if (alert.getResolved() == null) alert.setResolved(false);
         return repo.save(alert);
     }
 
     @Override
     public FraudAlertRecord resolveAlert(Long id) {
-        FraudAlertRecord a = repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Request not found"));
-        a.setResolved(true);
-        return repo.save(a);
+        FraudAlertRecord alert = repo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Alert not found"));
+        alert.setResolved(true);
+        return repo.save(alert);
     }
 
     @Override
-    public List<FraudAlertRecord> getAlertsBySerial(String serial) {
-        return repo.findBySerialNumber(serial);
+    public Optional<FraudAlertRecord> getAlertById(Long id) {
+        return repo.findById(id);
+    }
+
+    @Override
+    public List<FraudAlertRecord> getAlertsBySerial(String serialNumber) {
+        return repo.findBySerialNumber(serialNumber);
     }
 
     @Override
