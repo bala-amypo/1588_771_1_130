@@ -6,7 +6,6 @@ import com.example.demo.service.DeviceOwnershipService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
@@ -28,7 +27,8 @@ public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
     }
 
     @Override
-    public Optional<DeviceOwnershipRecord> getDeviceBySerial(String serialNumber) {
+    public DeviceOwnershipRecord getDeviceBySerial(String serialNumber) {
+        // returns DeviceOwnershipRecord directly, not Optional
         return repo.findBySerialNumber(serialNumber);
     }
 }
