@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/fraud-alerts")
+@RequestMapping("/api/fraud/alerts")
 public class FraudAlertController {
 
     private final FraudAlertService service;
@@ -16,12 +16,27 @@ public class FraudAlertController {
         this.service = service;
     }
 
-    @PostMapping
-    public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord record) {
-        return service.createAlert(record);
+    @PostMapping("/create")
+    public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord alert) {
+        return service.createAlert(alert);
     }
 
-    @GetMapping
+    @PutMapping("/{id}/resolve")
+    public FraudAlertRecord resolveAlert(@PathVariable Long id) {
+        return service.resolveAlert(id);
+    }
+
+    @GetMapping("/serial/{serialNumber}")
+    public List<FraudAlertRecord> getAlertsBySerial(@PathVariable String serialNumber) {
+        return service.getAlertsBySerial(serialNumber);
+    }
+
+    @GetMapping("/claim/{claimId}")
+    public List<FraudAlertRecord> getAlertsByClaim(@PathVariable Long claimId) {
+        return service.getAlertsByClaim(claimId);
+    }
+
+    @GetMapping("/all")
     public List<FraudAlertRecord> getAllAlerts() {
         return service.getAllAlerts();
     }
