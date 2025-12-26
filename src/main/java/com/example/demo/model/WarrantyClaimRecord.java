@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Data
@@ -11,11 +11,12 @@ import jakarta.persistence.*;
 public class WarrantyClaimRecord {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     private String serialNumber;
     private String claimReason;
 
+    @Builder.Default
     private String status = "PENDING";
 }

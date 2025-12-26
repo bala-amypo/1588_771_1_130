@@ -3,9 +3,13 @@ package com.example.demo.service.impl;
 import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.repository.DeviceOwnershipRecordRepository;
 import com.example.demo.service.DeviceOwnershipService;
-import java.util.*;
+import org.springframework.stereotype.Service;
 
-public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class DeviceOwnershipServiceImpl {
 
     private final DeviceOwnershipRecordRepository repo;
 
@@ -13,26 +17,23 @@ public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
         this.repo = repo;
     }
 
-    @Override
     public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord d) {
         if (repo.existsBySerialNumber(d.getSerialNumber()))
             throw new IllegalArgumentException();
         return repo.save(d);
     }
 
-    @Override
-    public Optional<DeviceOwnershipRecord> getBySerial(String serial) {
-        return repo.findBySerialNumber(serial);
+    public Optional<DeviceOwnershipRecord> getBySerial(String s) {
+        return repo.findBySerialNumber(s);
     }
 
-    @Override
     public List<DeviceOwnershipRecord> getAllDevices() {
         return repo.findAll();
     }
 
-    @Override
     public DeviceOwnershipRecord updateDeviceStatus(Long id, boolean active) {
-        DeviceOwnershipRecord d = repo.findById(id).orElseThrow();
+        DeviceOwnershipRecord d = repo.findById(id)
+                .orElseThrow(NoSuchElementException::new);
         d.setActive(active);
         return repo.save(d);
     }

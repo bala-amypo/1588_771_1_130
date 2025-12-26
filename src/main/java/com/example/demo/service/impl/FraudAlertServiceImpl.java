@@ -5,7 +5,8 @@ import com.example.demo.repository.FraudAlertRecordRepository;
 import com.example.demo.service.FraudAlertService;
 import java.util.*;
 
-public class FraudAlertServiceImpl implements FraudAlertService {
+@Service
+public class FraudAlertServiceImpl {
 
     private final FraudAlertRecordRepository repo;
 
@@ -13,20 +14,22 @@ public class FraudAlertServiceImpl implements FraudAlertService {
         this.repo = repo;
     }
 
-    @Override
-    public FraudAlertRecord createAlert(FraudAlertRecord a) {
-        return repo.save(a);
+    public FraudAlertRecord createAlert(FraudAlertRecord r) {
+        return repo.save(r);
     }
 
-    @Override
     public FraudAlertRecord resolveAlert(Long id) {
-        FraudAlertRecord f = repo.findById(id).orElseThrow();
-        f.setResolved(true);
-        return repo.save(f);
+        FraudAlertRecord r = repo.findById(id)
+                .orElseThrow(NoSuchElementException::new);
+        r.setResolved(true);
+        return repo.save(r);
     }
 
-    @Override
-    public List<FraudAlertRecord> getAlertsByClaim(Long claimId) {
-        return repo.findByClaimId(claimId);
+    public List<FraudAlertRecord> getAlertsByClaim(Long id) {
+        return repo.findByClaimId(id);
+    }
+
+    public List<FraudAlertRecord> getAllAlerts() {
+        return repo.findAll();
     }
 }
