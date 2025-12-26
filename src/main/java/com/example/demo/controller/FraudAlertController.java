@@ -16,9 +16,9 @@ public class FraudAlertController {
         this.service = service;
     }
 
-    @PostMapping("/create")
-    public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord alert) {
-        return service.createAlert(alert);
+    @PostMapping
+    public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord record) {
+        return service.createAlert(record);
     }
 
     @GetMapping
