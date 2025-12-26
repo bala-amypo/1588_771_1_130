@@ -1,11 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.model.FraudRule;
+import com.example.demo.model.FraudRuleRecord;
+
 import java.util.List;
-import java.util.Optional;
 
 public interface FraudRuleService {
-    FraudRule createRule(FraudRule rule);
-    Optional<FraudRule> getRuleByCode(String code);
-    List<FraudRule> getActiveRules();
+
+    FraudRuleRecord saveRule(FraudRuleRecord rule);
+
+    List<FraudRuleRecord> getAllRules();
+
+    FraudRuleRecord updateRuleStatus(Long id, boolean active);
 }
