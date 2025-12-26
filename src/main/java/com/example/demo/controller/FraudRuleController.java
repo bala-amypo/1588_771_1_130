@@ -2,34 +2,52 @@ package com.example.demo.controller;
 
 import com.example.demo.model.FraudRule;
 import com.example.demo.service.FraudRuleService;
-import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/fraud-rules")
-@SecurityRequirement(name="bearerAuth")
+@Tag(name = "Fraud Rules")
 public class FraudRuleController {
-    
-    private final FraudRuleService fraudRuleService;
-    
-    public FraudRuleController(FraudRuleService fraudRuleService) {
-        this.fraudRuleService = fraudRuleService;
+
+    private final FraudRuleService service;
+
+    public FraudRuleController(FraudRuleService service) {
+        this.service = service;
     }
+
     
     @PostMapping
-    public ResponseEntity<FraudRule> createRule(@RequestBody FraudRule rule) {
-        return ResponseEntity.ok(fraudRuleService.createRule(rule));
+    public FraudRule createRule(@RequestBody FraudRule rule) {
+        return service.createRule(rule);
     }
-    
-    @GetMapping
-    public ResponseEntity<List<FraudRule>> getAllRules() {
-        return ResponseEntity.ok(fraudRuleService.getAllRules());
+
+    @PutMapping("/{id}")
+    public FraudRule updateRule(
+            @PathVariable Long id,
+            @RequestBody FraudRule rule) {
+        rule.setId(id);
+        return service.createRule(rule);
     }
-    
     @GetMapping("/active")
-    public ResponseEntity<List<FraudRule>> getActiveRules() {
-        return ResponseEntity.ok(fraudRuleService.getActiveRules());
+    public List<FraudRule> getActive() {
+        return service.getActiveRules();
+    }
+
+    
+    @GetMapping("/{id}")
+    public Optional<FraudRule> getById(@PathVariable Long id) {
+        return service.getActiveRules()
+                .stream()
+                .filter(r -> id.equals(r.getId()))
+                .findFirst();
+    }
+
+    @GetMapping
+    public List<FraudRule> getAll() {
+        return service.getActiveRules();
     }
 }
