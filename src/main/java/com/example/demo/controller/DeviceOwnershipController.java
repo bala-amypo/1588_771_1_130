@@ -2,45 +2,45 @@ package com.example.demo.controller;
 
 import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.service.DeviceOwnershipService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/devices")
+@Tag(name = "Device", description = "Device ownership management")
 public class DeviceOwnershipController {
 
     private final DeviceOwnershipService service;
 
-    // ✅ THIS constructor is what your TestNG suite uses
     public DeviceOwnershipController(DeviceOwnershipService service) {
         this.service = service;
     }
 
-    // -------- Optional REST endpoints (not used by tests) --------
-
-    @PostMapping("/register")
-    public DeviceOwnershipRecord registerDevice(
-            @RequestBody DeviceOwnershipRecord record) {
-        return service.registerDevice(record);
-    }
-
-    @GetMapping("/{serial}")
-    public Optional<DeviceOwnershipRecord> getBySerial(
-            @PathVariable String serial) {
-        return service.getBySerial(serial);
+    @PostMapping
+    public ResponseEntity<DeviceOwnershipRecord> register(@RequestBody DeviceOwnershipRecord device) {
+        return ResponseEntity.ok(service.registerDevice(device));
     }
 
     @GetMapping
-    public List<DeviceOwnershipRecord> getAllDevices() {
-        return service.getAllDevices();
+    public ResponseEntity<List<DeviceOwnershipRecord>> getAll() {
+        return ResponseEntity.ok(service.getAllDevices());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DeviceOwnershipRecord> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
+    }
+
+    @GetMapping("/serial/{serialNumber}")
+    public ResponseEntity<DeviceOwnershipRecord> getBySerial(@PathVariable String serialNumber) {
+        return ResponseEntity.ok(service.getBySerial(serialNumber));
     }
 
     @PutMapping("/{id}/status")
-    public DeviceOwnershipRecord updateStatus(
-            @PathVariable Long id,
-            @RequestParam boolean active) {
-        return service.updateDeviceStatus(id, active);
+    public ResponseEntity<DeviceOwnershipRecord> updateStatus(@PathVariable Long id, @RequestParam boolean active) {
+        return ResponseEntity.ok(service.updateDeviceStatus(id, active));
     }
 }

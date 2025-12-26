@@ -2,44 +2,40 @@ package com.example.demo.controller;
 
 import com.example.demo.model.StolenDeviceReport;
 import com.example.demo.service.StolenDeviceService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/stolen-devices")
+@Tag(name = "StolenDevice", description = "Stolen device reporting")
 public class StolenDeviceController {
 
     private final StolenDeviceService service;
 
-    // ✅ REQUIRED constructor for tests
     public StolenDeviceController(StolenDeviceService service) {
         this.service = service;
     }
 
-    // -------- Optional endpoints --------
-
     @PostMapping
-    public StolenDeviceReport reportDevice(
-            @RequestBody StolenDeviceReport report) {
-        return service.reportDevice(report);
-    }
-
-    @GetMapping("/{id}")
-    public Optional<StolenDeviceReport> getReportById(@PathVariable Long id) {
-        return service.getReportById(id);
+    public ResponseEntity<StolenDeviceReport> report(@RequestBody StolenDeviceReport report) {
+        return ResponseEntity.ok(service.reportStolen(report));
     }
 
     @GetMapping
-    public List<StolenDeviceReport> getAllReports() {
-        return service.getAllReports();
+    public ResponseEntity<List<StolenDeviceReport>> getAll() {
+        return ResponseEntity.ok(service.getAllReports());
     }
 
-    @PutMapping("/{id}/status")
-    public StolenDeviceReport updateStatus(
-            @PathVariable Long id,
-            @RequestParam String status) {
-        return service.updateStatus(id, status);
+    @GetMapping("/{id}")
+    public ResponseEntity<StolenDeviceReport> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getReportById(id).orElseThrow());
+    }
+
+    @GetMapping("/serial/{serialNumber}")
+    public ResponseEntity<List<StolenDeviceReport>> getBySerial(@PathVariable String serialNumber) {
+        return ResponseEntity.ok(service.getReportsBySerial(serialNumber));
     }
 }

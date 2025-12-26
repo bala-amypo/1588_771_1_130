@@ -1,51 +1,40 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.*;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
-import org.springframework.http.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import java.util.Optional;
+import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/auth")
+@Tag(name = "Auth", description = "Authentication endpoints")
 public class AuthController {
 
-    private final UserRepository repo;
-    private final PasswordEncoder encoder;
+    private final UserService userService;
     private final JwtTokenProvider jwt;
 
-    public AuthController(UserRepository r, PasswordEncoder e, JwtTokenProvider j) {
-        this.repo = r;
-        this.encoder = e;
-        this.jwt = j;
+    public AuthController(UserService userService, JwtTokenProvider jwt) {
+        this.userService = userService;
+        this.jwt = jwt;
     }
 
-    public ResponseEntity<?> register(RegisterRequest req) {
-        if (repo.findByEmail(req.getEmail()).isPresent())
-            return ResponseEntity.status(409).build();
-
-        User u = User.builder()
-                .email(req.getEmail())
-                .password(encoder.encode(req.getPassword()))
-                .roles(req.getRoles())
-                .name(req.getName())
-                .build();
-
-        repo.save(u);
-        String token = jwt.createToken(u.getId(), u.getEmail(), u.getRoles());
-        return ResponseEntity.ok(new AuthResponse(token));
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
+        User user = userService.registerUser(request);
+        return ResponseEntity.ok(user);
     }
 
-    public ResponseEntity<?> login(AuthRequest req) {
-        Optional<User> u = repo.findByEmail(req.getEmail());
-        if (u.isEmpty() || !encoder.matches(req.getPassword(), u.get().getPassword()))
-            return ResponseEntity.status(401).build();
-
-        String token = jwt.createToken(
-                u.get().getId(),
-                u.get().getEmail(),
-                u.get().getRoles());
-
-        return ResponseEntity.ok(new AuthResponse(token));
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+        User user = userService.loginUser(request);
+        String token = jwt.createToken(user.getId(), user.getEmail(), user.getRoles());
+        AuthResponse response = new AuthResponse(token, user.getId(), user.getEmail(), user.getRoles());
+        return ResponseEntity.ok(response);
     }
 }
