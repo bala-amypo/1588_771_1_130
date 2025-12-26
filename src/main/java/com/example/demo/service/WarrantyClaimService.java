@@ -1,12 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.model.WarrantyClaimRecord;
-import java.util.*;
+
+import java.util.List;
 
 public interface WarrantyClaimService {
-    WarrantyClaimRecord submitClaim(WarrantyClaimRecord claim);
-    WarrantyClaimRecord updateClaimStatus(Long id, String status);
-    Optional<WarrantyClaimRecord> getClaimById(Long id);
+    WarrantyClaimRecord submitClaim(WarrantyClaimRecord record);
     List<WarrantyClaimRecord> getAllClaims();
-    List<WarrantyClaimRecord> getClaimsBySerial(String serial);
 }

@@ -2,15 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.model.FraudAlertRecord;
 import com.example.demo.service.FraudAlertService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/fraud-alerts")
-@Tag(name = "FraudAlert", description = "Fraud alert management")
 public class FraudAlertController {
 
     private final FraudAlertService service;
@@ -19,33 +16,13 @@ public class FraudAlertController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<FraudAlertRecord> create(@RequestBody FraudAlertRecord alert) {
-        return ResponseEntity.ok(service.createAlert(alert));
+    @PostMapping("/create")
+    public FraudAlertRecord createAlert(@RequestBody FraudAlertRecord alert) {
+        return service.createAlert(alert);
     }
 
     @GetMapping
-    public ResponseEntity<List<FraudAlertRecord>> getAll() {
-        return ResponseEntity.ok(service.getAllAlerts());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<FraudAlertRecord> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getAlertById(id).orElseThrow());
-    }
-
-    @GetMapping("/serial/{serialNumber}")
-    public ResponseEntity<List<FraudAlertRecord>> getBySerial(@PathVariable String serialNumber) {
-        return ResponseEntity.ok(service.getAlertsBySerial(serialNumber));
-    }
-
-    @GetMapping("/claim/{claimId}")
-    public ResponseEntity<List<FraudAlertRecord>> getByClaim(@PathVariable Long claimId) {
-        return ResponseEntity.ok(service.getAlertsByClaim(claimId));
-    }
-
-    @PutMapping("/{id}/resolve")
-    public ResponseEntity<FraudAlertRecord> resolve(@PathVariable Long id) {
-        return ResponseEntity.ok(service.resolveAlert(id));
+    public List<FraudAlertRecord> getAllAlerts() {
+        return service.getAllAlerts();
     }
 }
