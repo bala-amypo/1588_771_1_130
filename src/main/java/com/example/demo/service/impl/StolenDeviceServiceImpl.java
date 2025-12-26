@@ -6,41 +6,34 @@ import com.example.demo.service.StolenDeviceService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class StolenDeviceServiceImpl implements StolenDeviceService {
 
-    private final StolenDeviceReportRepository stolenRepo;
+    private final StolenDeviceReportRepository repository;
 
-    public StolenDeviceServiceImpl(StolenDeviceReportRepository stolenRepo) {
-        this.stolenRepo = stolenRepo;
+    public StolenDeviceServiceImpl(StolenDeviceReportRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public StolenDeviceReport reportDevice(StolenDeviceReport report) {
-        if (stolenRepo.existsBySerialNumber(report.getSerialNumber())) {
-            throw new IllegalArgumentException("Device already reported as stolen");
-        }
-        return stolenRepo.save(report);
+    public StolenDeviceReport reportStolen(StolenDeviceReport report) {
+        return repository.save(report);
     }
 
     @Override
-    public Optional<StolenDeviceReport> getBySerial(String serialNumber) {
-        return stolenRepo.findBySerialNumber(serialNumber);
+    public Optional<StolenDeviceReport> getReportById(Long id) {
+        return repository.findById(id);
+    }
+
+    @Override
+    public List<StolenDeviceReport> getReportsBySerial(String serialNumber) {
+        return repository.findBySerialNumber(serialNumber);
     }
 
     @Override
     public List<StolenDeviceReport> getAllReports() {
-        return stolenRepo.findAll();
-    }
-
-    @Override
-    public void removeReport(Long id) {
-        if (!stolenRepo.existsById(id)) {
-            throw new NoSuchElementException("Report not found");
-        }
-        stolenRepo.deleteById(id);
+        return repository.findAll();
     }
 }

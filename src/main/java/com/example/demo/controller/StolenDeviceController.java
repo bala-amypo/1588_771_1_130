@@ -2,10 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.model.StolenDeviceReport;
 import com.example.demo.service.StolenDeviceService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/stolen-devices")
@@ -17,25 +17,23 @@ public class StolenDeviceController {
         this.service = service;
     }
 
-    @PostMapping("/")
-    public ResponseEntity<StolenDeviceReport> report(@RequestBody StolenDeviceReport report) {
-        return ResponseEntity.ok(service.reportStolen(report));
-    }
-
-    @GetMapping("/")
-    public ResponseEntity<List<StolenDeviceReport>> getAll() {
-        return ResponseEntity.ok(service.getAllReports());
+    @PostMapping("/report")
+    public StolenDeviceReport reportStolen(@RequestBody StolenDeviceReport report) {
+        return service.reportStolen(report);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StolenDeviceReport> getById(@PathVariable Long id) {
-        return service.getReportById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Optional<StolenDeviceReport> getReportById(@PathVariable Long id) {
+        return service.getReportById(id);
     }
 
     @GetMapping("/serial/{serialNumber}")
-    public ResponseEntity<List<StolenDeviceReport>> getBySerial(@PathVariable String serialNumber) {
-        return ResponseEntity.ok(service.getReportsBySerial(serialNumber));
+    public List<StolenDeviceReport> getReportsBySerial(@PathVariable String serialNumber) {
+        return service.getReportsBySerial(serialNumber);
+    }
+
+    @GetMapping
+    public List<StolenDeviceReport> getAllReports() {
+        return service.getAllReports();
     }
 }
