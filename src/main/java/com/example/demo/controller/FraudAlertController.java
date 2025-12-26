@@ -1,31 +1,29 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.FraudAlert;
+import com.example.demo.model.FraudAlertRecord;
 import com.example.demo.service.FraudAlertService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/fraud-alerts")
-@RequiredArgsConstructor
 public class FraudAlertController {
-
+    
     private final FraudAlertService service;
-
-    @PostMapping("/create")
-    public FraudAlert create(@RequestBody FraudAlert alert) {
-        return service.createAlert(alert);
+    
+    public FraudAlertController(FraudAlertService service) {
+        this.service = service;
     }
-
-    @GetMapping("/all")
-    public List<FraudAlert> getAll() {
-        return service.getAllAlerts();
+    
+    @PostMapping
+    public ResponseEntity<FraudAlertRecord> createAlert(@RequestBody FraudAlertRecord alert) {
+        return ResponseEntity.ok(service.create(alert));
     }
-
-    @GetMapping("/serial/{serial}")
-    public List<FraudAlert> getBySerial(@PathVariable String serial) {
-        return service.getAlertsBySerial(serial);
+    
+    @GetMapping
+    public ResponseEntity<List<FraudAlertRecord>> getAllAlerts() {
+        return ResponseEntity.ok(service.getAll());
     }
 }
