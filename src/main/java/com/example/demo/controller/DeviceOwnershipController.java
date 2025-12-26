@@ -2,8 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.service.impl.DeviceOwnershipServiceImpl;
 import org.springframework.web.bind.annotation.RestController;
-
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
+@ServiceRequirement(name="bearerAuth")
 public class DeviceOwnershipController {
     private final DeviceOwnershipServiceImpl service;
     
