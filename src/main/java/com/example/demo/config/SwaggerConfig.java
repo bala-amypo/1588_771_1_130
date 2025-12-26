@@ -56,7 +56,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         Server server = new Server();
-        server.setUrl("/"); // relative path, works for local & deployed
+        server.setUrl("https://9112.pro604cr.amypo.ai"); // relative path, works for local & deployed
 
         SecurityScheme bearerAuth = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
