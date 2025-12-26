@@ -2,51 +2,25 @@ package com.example.demo.controller;
 
 import com.example.demo.model.FraudRule;
 import com.example.demo.service.FraudRuleService;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/fraud-rules")
+@RequiredArgsConstructor
 public class FraudRuleController {
 
     private final FraudRuleService service;
 
-    public FraudRuleController(FraudRuleService service) {
-        this.service = service;
+    @PostMapping("/create")
+    public FraudRule create(@RequestBody FraudRule rule) {
+        return service.createRule(rule);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<FraudRule> create(@RequestBody FraudRule rule) {
-        return ResponseEntity.ok(service.createRule(rule));
-    }
-
-    @GetMapping("/")
-    public ResponseEntity<List<FraudRule>> getAll() {
-        return ResponseEntity.ok(service.getAllRules());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<FraudRule> getById(@PathVariable Long id) {
-        return service.getAllRules().stream().filter(r -> r.getId().equals(id))
-                .findFirst().map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/active")
-    public ResponseEntity<List<FraudRule>> getActive() {
-        return ResponseEntity.ok(service.getActiveRules());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<FraudRule> update(@PathVariable Long id, @RequestBody FraudRule rule) {
-        return ResponseEntity.ok(service.updateRule(id, rule));
-    }
-
-    @GetMapping("/code/{ruleCode}")
-    public ResponseEntity<FraudRule> getByCode(@PathVariable String ruleCode) {
-        return service.getRuleByCode(ruleCode)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/all")
+    public List<FraudRule> getAll() {
+        return service.getAllRules();
     }
 }

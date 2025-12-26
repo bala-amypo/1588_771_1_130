@@ -1,50 +1,31 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.FraudAlertRecord;
+import com.example.demo.model.FraudAlert;
 import com.example.demo.service.FraudAlertService;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/fraud-alerts")
+@RequiredArgsConstructor
 public class FraudAlertController {
 
     private final FraudAlertService service;
 
-    public FraudAlertController(FraudAlertService service) {
-        this.service = service;
+    @PostMapping("/create")
+    public FraudAlert create(@RequestBody FraudAlert alert) {
+        return service.createAlert(alert);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<FraudAlertRecord> create(@RequestBody FraudAlertRecord alert) {
-        return ResponseEntity.ok(service.createAlert(alert));
+    @GetMapping("/all")
+    public List<FraudAlert> getAll() {
+        return service.getAllAlerts();
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<FraudAlertRecord>> getAll() {
-        return ResponseEntity.ok(service.getAllAlerts());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<FraudAlertRecord> getById(@PathVariable Long id) {
-        return service.getAlertsByClaim(id).stream().findFirst()
-                .map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/serial/{serialNumber}")
-    public ResponseEntity<List<FraudAlertRecord>> getBySerial(@PathVariable String serialNumber) {
-        return ResponseEntity.ok(service.getAlertsBySerial(serialNumber));
-    }
-
-    @GetMapping("/claim/{claimId}")
-    public ResponseEntity<List<FraudAlertRecord>> getByClaim(@PathVariable Long claimId) {
-        return ResponseEntity.ok(service.getAlertsByClaim(claimId));
-    }
-
-    @PutMapping("/{id}/resolve")
-    public ResponseEntity<FraudAlertRecord> resolve(@PathVariable Long id) {
-        return ResponseEntity.ok(service.resolveAlert(id));
+    @GetMapping("/serial/{serial}")
+    public List<FraudAlert> getBySerial(@PathVariable String serial) {
+        return service.getAlertsBySerial(serial);
     }
 }
