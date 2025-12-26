@@ -1,24 +1,15 @@
-package com.example.demo.controller;
+package com.example.demo.dto;
 
-import com.example.demo.model.User;
-import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@RestController
-@RequestMapping("/api/auth")
-public class AuthController {
+import java.util.Set;
 
-    @Autowired
-    private UserService userService;
-
-    @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.register(user);
-    }
-
-    @PostMapping("/login")
-    public String authenticateUser(@RequestBody User user) {
-        return userService.authenticate(user.getEmail(), user.getPassword());
-    }
+@Data
+@AllArgsConstructor
+public class AuthResponse {
+    private String email;
+    private Long id;
+    private String token; // optional, just placeholder
+    private Set<String> roles;
 }

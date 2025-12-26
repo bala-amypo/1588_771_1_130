@@ -5,5 +5,5 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
     User register(User user);
-    String authenticate(String email, String password);
+    User authenticate(String email, String password);
 }
