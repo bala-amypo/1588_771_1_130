@@ -15,26 +15,26 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-
-        // Server configuration
-        Server server = new Server();
-        server.setUrl("https://9112.pro604cr.amypo.ai");
-        server.setDescription("Production Server");
-
-        // Security scheme for JWT
-        SecurityScheme bearerAuth = new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP)
-                .scheme("bearer")
-                .bearerFormat("JWT")
-                .description("Enter JWT token");
-
         return new OpenAPI()
+
+                // API Info
                 .info(new Info()
                         .title("JWT Demo API")
                         .version("1.0")
                         .description("Simple JWT Demo Project for Students"))
-                .servers(List.of(server))
+
+                // Server Configuration
+                .servers(List.of(
+                        new Server().url("https://9112.pro604cr.amypo.ai")
+                ))
+
+                // Security Configuration (JWT Bearer)
                 .components(new Components()
-                        .addSecuritySchemes("bearerAuth", bearerAuth));
+                        .addSecuritySchemes("bearerAuth",
+                                new SecurityScheme()
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                                        .description("Enter JWT token")));
     }
 }
