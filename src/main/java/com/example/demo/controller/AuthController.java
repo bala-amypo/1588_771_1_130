@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.RegisterRequest;
@@ -61,21 +62,16 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest req) {
+     @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
 
-        return userRepo.findByEmail(req.getEmail())
-                .filter(user ->
-                        encoder.matches(req.getPassword(), user.getPassword()))
-                .map(user -> ResponseEntity.ok(
-                        new AuthResponse(
-                                jwt.createToken(
-                                        user.getId(),
-                                        user.getEmail(),
-                                        user.getRoles())
-                        )
-                ))
-               
-                .orElse(ResponseEntity.status(401).build());
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                request.getEmail(),
+                request.getPassword()
+            )
+        );
+
+        return ResponseEntity.ok("Login successful");
     }
 }
