@@ -4,11 +4,14 @@ import com.example.demo.model.FraudRule;
 import com.example.demo.service.FraudRuleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/fraud-rules")
+@SecurityRequirement(name = "bearerAuth")
 public class FraudRuleController {
     
     private final FraudRuleService fraudRuleService;

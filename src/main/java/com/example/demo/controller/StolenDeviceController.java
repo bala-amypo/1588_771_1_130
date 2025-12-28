@@ -4,12 +4,15 @@ import com.example.demo.model.StolenDeviceReport;
 import com.example.demo.service.StolenDeviceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/stolen-devices")
+@SecurityRequirement(name = "bearerAuth")
 public class StolenDeviceController {
     
     private final StolenDeviceService stolenDeviceService;
