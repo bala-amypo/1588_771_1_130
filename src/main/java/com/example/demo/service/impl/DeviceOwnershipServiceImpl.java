@@ -38,3 +38,4 @@ public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
         return repository.save(device);
     }
 }
+

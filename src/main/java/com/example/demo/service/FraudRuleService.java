@@ -10,3 +10,4 @@ public interface FraudRuleService {
     List<FraudRule> getAllRules();
     Optional<FraudRule> getRuleByCode(String ruleCode);
 }
+

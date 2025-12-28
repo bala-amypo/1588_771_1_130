@@ -1,3 +1,4 @@
+
 package com.example.demo.service.impl;
 
 import com.example.demo.model.FraudRule;
@@ -34,3 +35,5 @@ public class FraudRuleServiceImpl implements FraudRuleService {
         return repository.findByRuleCode(ruleCode);
     }
 }
+
+

@@ -10,3 +10,4 @@ public interface DeviceOwnershipService {
     List<DeviceOwnershipRecord> getAllDevices();
     DeviceOwnershipRecord updateDeviceStatus(Long id, Boolean active);
 }
+

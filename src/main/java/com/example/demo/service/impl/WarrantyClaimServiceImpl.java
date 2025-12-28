@@ -1,4 +1,3 @@
-
 package com.example.demo.service.impl;
 
 import com.example.demo.model.DeviceOwnershipRecord;
@@ -74,4 +73,3 @@ public class WarrantyClaimServiceImpl implements WarrantyClaimService {
         return claimRepo.findBySerialNumber(serialNumber);
     }
 }
-
