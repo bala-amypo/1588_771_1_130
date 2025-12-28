@@ -5,6 +5,7 @@ import com.example.demo.service.impl.DeviceOwnershipServiceImpl;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@SecurityRequirement
 public class DeviceOwnershipController {
     private final DeviceOwnershipServiceImpl service;
     
