@@ -1,3 +1,4 @@
+
 package com.example.demo.model;
 
 import jakarta.persistence.*;
@@ -48,4 +49,5 @@ public class StolenDeviceReport {
         public StolenDeviceReport build() { return report; }
     }
 }
+
 

@@ -55,3 +55,4 @@ public class DeviceOwnershipRecord {
         public DeviceOwnershipRecord build() { return record; }
     }
 }
+

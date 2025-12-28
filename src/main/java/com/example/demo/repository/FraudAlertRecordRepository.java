@@ -1,3 +1,5 @@
+
+
 package com.example.demo.repository;
 
 import com.example.demo.model.FraudAlertRecord;
@@ -7,3 +9,4 @@ import java.util.List;
 public interface FraudAlertRecordRepository extends JpaRepository<FraudAlertRecord, Long> {
     List<FraudAlertRecord> findByClaimId(Long claimId);
 }
+

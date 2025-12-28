@@ -1,3 +1,4 @@
+
 package com.example.demo.model;
 
 import jakarta.persistence.*;
@@ -49,3 +50,4 @@ public class FraudRule {
         public FraudRule build() { return rule; }
     }
 }
+

@@ -8,4 +8,3 @@ public interface WarrantyClaimRecordRepository extends JpaRepository<WarrantyCla
     List<WarrantyClaimRecord> findBySerialNumber(String serialNumber);
     boolean existsBySerialNumberAndClaimReason(String serialNumber, String claimReason);
 }
-
