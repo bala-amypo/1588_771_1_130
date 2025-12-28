@@ -45,4 +45,3 @@ public class StolenDeviceController {
         return ResponseEntity.noContent().build();
     }
 }
-

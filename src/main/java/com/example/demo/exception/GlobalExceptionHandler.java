@@ -1,3 +1,4 @@
+
 package com.example.demo.exception;
 
 import org.springframework.http.HttpStatus;
@@ -21,4 +22,3 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
-
