@@ -1,57 +1,40 @@
 package com.example.demo.util;
 
-import com.example.demo.exception.ResourceNotFoundException;
-
-import java.time.LocalDate;
-
 public final class ValidationUtil {
 
     private ValidationUtil() {
-
+        // Prevent object creation
     }
 
     /**
-     * Validates duplicate condition
+     * Validate email format
      */
-    public static void checkDuplicate(boolean exists, String message) {
-        if (exists) {
-            throw new IllegalArgumentException(message);
+    public static boolean isValidEmail(String email) {
+        if (email == null || email.isBlank()) {
+            return false;
         }
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
 
     /**
-     * Validates resource existence
+     * Validate password strength
+     * Minimum 6 characters
      */
-    public static void checkFound(Object obj, String message) {
-        if (obj == null) {
-            throw new ResourceNotFoundException(message);
-        }
+    public static boolean isValidPassword(String password) {
+        return password != null && password.length() >= 6;
     }
 
     /**
-     * Validates boolean condition
+     * Validate non-empty string
      */
-    public static void checkCondition(boolean condition, String message) {
-        if (!condition) {
-            throw new IllegalArgumentException(message);
-        }
+    public static boolean isNotBlank(String value) {
+        return value != null && !value.trim().isEmpty();
     }
 
     /**
-     * Validates warranty expiry
+     * Validate positive ID
      */
-    public static void validateWarranty(LocalDate expiryDate) {
-        if (expiryDate == null || expiryDate.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("Warranty expired");
-        }
-    }
-
-    /**
-     * Validates active device status
-     */
-    public static void validateActive(Boolean active) {
-        if (active == null || !active) {
-            throw new IllegalArgumentException("Device is inactive");
-        }
+    public static boolean isValidId(Long id) {
+        return id != null && id > 0;
     }
 }

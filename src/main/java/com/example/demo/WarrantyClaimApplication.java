@@ -9,3 +9,4 @@ public class WarrantyClaimApplication {
         SpringApplication.run(WarrantyClaimApplication.class, args);
     }
 }
+
