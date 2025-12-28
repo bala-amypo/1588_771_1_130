@@ -1,89 +1,56 @@
 package com.example.demo.config;
 
-import com.example.demo.security.CustomUserDetailsService;
-import com.example.demo.security.JwtAuthenticationFilter;
-import com.example.demo.security.JwtTokenProvider;
+import com.example.demo.repository.*;
+import com.example.demo.service.*;
+import com.example.demo.service.impl.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
-public class SecurityConfig {
+public class ServiceConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final CustomUserDetailsService userDetailsService;
+   
+    @Bean
+    public DeviceOwnershipService deviceOwnershipService(
+            DeviceOwnershipRecordRepository deviceRepo) {
 
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider,
-                          CustomUserDetailsService userDetailsService) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.userDetailsService = userDetailsService;
+        return new DeviceOwnershipServiceImpl(deviceRepo);
     }
 
-    // 🔐 JWT Filter
+ 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService);
+    public WarrantyClaimService warrantyClaimService(
+            WarrantyClaimRecordRepository claimRepo,
+            DeviceOwnershipRecordRepository deviceRepo,
+            StolenDeviceReportRepository stolenRepo,
+            FraudAlertRecordRepository alertRepo,
+            FraudRuleRepository ruleRepo) {
+
+        return new WarrantyClaimServiceImpl(
+                claimRepo, deviceRepo, stolenRepo, alertRepo, ruleRepo);
     }
 
-    // 🔑 Password Encoder
+   
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public StolenDeviceService stolenDeviceService(
+            StolenDeviceReportRepository stolenRepo,
+            DeviceOwnershipRecordRepository deviceRepo) {
+
+        return new StolenDeviceServiceImpl(stolenRepo, deviceRepo);
     }
 
-    // 🔑 Authentication Manager
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration
-    ) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public FraudRuleService fraudRuleService(
+            FraudRuleRepository ruleRepo) {
+
+        return new FraudRuleServiceImpl(ruleRepo);
     }
 
-    // 🔐 Main Security Configuration
+  
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public FraudAlertService fraudAlertService(
+            FraudAlertRecordRepository alertRepo) {
 
-        http
-            // Disable CSRF (JWT)
-            .csrf(csrf -> csrf.disable())
-
-            // Stateless session
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-
-            // Authorization rules
-            .authorizeHttpRequests(auth -> auth
-
-                // ✅ Swagger UI
-                .requestMatchers(
-                    "/v3/api-docs/**",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html"
-                ).permitAll()
-
-                // ✅ Auth endpoints
-                .requestMatchers("/api/auth/**").permitAll()
-
-                // 🔐 Secure everything else
-                .anyRequest().authenticated()
-            )
-
-            // Add JWT filter
-            .addFilterBefore(
-                jwtAuthenticationFilter(),
-                UsernamePasswordAuthenticationFilter.class
-            );
-
-        return http.build();
+        return new FraudAlertServiceImpl(alertRepo);
     }
 }
