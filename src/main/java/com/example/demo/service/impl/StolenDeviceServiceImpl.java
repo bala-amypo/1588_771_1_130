@@ -7,6 +7,7 @@ import com.example.demo.service.StolenDeviceService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;   // ✅ THIS WAS MISSING
 
 @Service
 public class StolenDeviceServiceImpl
@@ -36,6 +37,11 @@ public class StolenDeviceServiceImpl
     @Override
     public List<StolenDeviceReport> getReportsBySerial(String serialNumber) {
         return stolenRepo.findBySerialNumber(serialNumber);
+    }
+
+    @Override
+    public Optional<StolenDeviceReport> getReportById(Long id) {
+        return stolenRepo.findById(id);
     }
 
     @Override

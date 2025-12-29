@@ -29,4 +29,9 @@ public class FraudAlertServiceImpl
     public List<FraudAlertRecord> getAlertsByClaim(Long claimId) {
         return repo.findByClaimId(claimId);
     }
+    @Override
+    public List<FraudAlertRecord> getAllAlerts() {
+        return repo.findAll();
+}
+
 }
