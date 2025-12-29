@@ -1,10 +1,14 @@
 package com.example.demo.service.impl;
+
 import com.example.demo.model.StolenDeviceReport;
-import com.example.demo.repository.*;
+import com.example.demo.repository.DeviceOwnershipRecordRepository;
+import com.example.demo.repository.StolenDeviceReportRepository;
 import com.example.demo.service.StolenDeviceService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class StolenDeviceServiceImpl
         implements StolenDeviceService {
 
@@ -21,7 +25,11 @@ public class StolenDeviceServiceImpl
 
     @Override
     public StolenDeviceReport reportStolen(StolenDeviceReport report) {
-        deviceRepo.findBySerialNumber(report.getSerialNumber()).orElseThrow();
+
+        deviceRepo.findBySerialNumber(report.getSerialNumber())
+                .orElseThrow(() ->
+                        new java.util.NoSuchElementException("Device not found"));
+
         return stolenRepo.save(report);
     }
 

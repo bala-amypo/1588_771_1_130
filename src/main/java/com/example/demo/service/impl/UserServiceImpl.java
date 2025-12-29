@@ -1,55 +1,58 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final List<User> users = new ArrayList<>();
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public User createUser(User user) {
-        users.add(user);
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
     public Optional<User> getUserById(Long id) {
-        return users.stream().filter(u -> u.getId().equals(id)).findFirst();
+        return userRepository.findById(id);
     }
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        return users.stream().filter(u -> u.getEmail().equals(email)).findFirst();
+        return userRepository.findByEmail(email);
     }
 
     @Override
     public List<User> getAllUsers() {
-        return users;
+        return userRepository.findAll();
     }
 
     @Override
     public User updateUser(Long id, User updatedUser) {
-        Optional<User> existing = getUserById(id);
-        if (existing.isPresent()) {
-            User u = existing.get();
-            u.setName(updatedUser.getName());
-            u.setEmail(updatedUser.getEmail());
-            u.setPassword(updatedUser.getPassword());
-            u.setRole(updatedUser.getRole());
-            return u;
-        }
-        return null; // Or throw exception
+        User existing = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new java.util.NoSuchElementException("User not found"));
+
+        existing.setName(updatedUser.getName());
+        existing.setEmail(updatedUser.getEmail());
+        existing.setPassword(updatedUser.getPassword());
+        existing.setRole(updatedUser.getRole());
+
+        return userRepository.save(existing);
     }
 
     @Override
     public void deleteUser(Long id) {
-        users.removeIf(u -> u.getId().equals(id));
+        userRepository.deleteById(id);
     }
 }
