@@ -3,10 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.model.StolenDeviceReport;
 import com.example.demo.service.StolenDeviceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/stolen-devices")
@@ -19,29 +19,31 @@ public class StolenDeviceController {
         this.service = service;
     }
 
+    // Report a stolen device
     @PostMapping
     public StolenDeviceReport reportStolen(
             @RequestBody StolenDeviceReport report) {
         return service.reportStolen(report);
     }
 
-
+    // Get stolen reports by serial number
     @GetMapping("/serial/{serialNumber}")
     public List<StolenDeviceReport> getBySerial(
             @PathVariable String serialNumber) {
         return service.getReportsBySerial(serialNumber);
     }
 
+    // Get stolen report by ID
     @GetMapping("/{id}")
-    public Optional<StolenDeviceReport> getById(
+    public ResponseEntity<StolenDeviceReport> getById(
             @PathVariable Long id) {
-        return service.getAllReports()
-                .stream()
-                .filter(r -> id.equals(r.getId()))
-                .findFirst();
+
+        return service.getReportById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-  
+    // Get all stolen reports
     @GetMapping
     public List<StolenDeviceReport> getAll() {
         return service.getAllReports();
