@@ -1,39 +1,46 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "device_ownership_records")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeviceOwnershipRecord {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true)
     private String serialNumber;
+
+    @Column(nullable = false)
     private String ownerName;
-    private LocalDate warrantyExpiration; // <-- add this field
 
-    private boolean active;
+    private String ownerEmail;
 
-    // Constructors
-    public DeviceOwnershipRecord() {}
+    private LocalDate purchaseDate;
 
-    public DeviceOwnershipRecord(Long id, String serialNumber, String ownerName, LocalDate warrantyExpiration, boolean active) {
-        this.id = id;
-        this.serialNumber = serialNumber;
-        this.ownerName = ownerName;
-        this.warrantyExpiration = warrantyExpiration;
-        this.active = active;
+    @Column(nullable = false)
+    private LocalDate warrantyExpiration;
+
+    @Column(nullable = false)
+    private Boolean active = true;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void onCreate() {
+        if (active == null) {
+            active = true;
+        }
+        this.createdAt = LocalDateTime.now();
     }
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getSerialNumber() { return serialNumber; }
-    public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
-
-    public String getOwnerName() { return ownerName; }
-    public void setOwnerName(String ownerName) { this.ownerName = ownerName; }
-
-    public LocalDate getWarrantyExpiration() { return warrantyExpiration; } // <-- getter
-    public void setWarrantyExpiration(LocalDate warrantyExpiration) { this.warrantyExpiration = warrantyExpiration; } // <-- setter
-
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
 }
