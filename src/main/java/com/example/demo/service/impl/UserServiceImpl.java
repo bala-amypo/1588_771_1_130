@@ -1,54 +1,55 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.User;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
-
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.password.PasswordEncoder;
-// import com.example.demo.model.Role;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
- 
-    private final PasswordEncoder encoder;
-    private final UserRepository userRepository;
-   
 
-    public UserServiceImpl(UserRepository repo,PasswordEncoder encoder) {
-        this.userRepository = repo;
-        this.encoder = encoder;
+    private final List<User> users = new ArrayList<>();
+
+    @Override
+    public User createUser(User user) {
+        users.add(user);
+        return user;
     }
 
     @Override
-    public User register(User user) {
-
-        if (user.getEmail() == null || user.getEmail().isBlank())
-            throw new IllegalArgumentException("Email cannot be empty");
-
-        if (user.getPassword() == null || user.getPassword().isBlank())
-            throw new IllegalArgumentException("Password cannot be empty");
-
-   
-        user.setPassword(encoder.encode(user.getPassword()));
-
-       if (user.getRole() == null) {
-    user.setRole("USER");
-}
-
-        return userRepository.save(user);
+    public Optional<User> getUserById(Long id) {
+        return users.stream().filter(u -> u.getId().equals(id)).findFirst();
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    public Optional<User> getUserByEmail(String email) {
+        return users.stream().filter(u -> u.getEmail().equals(email)).findFirst();
     }
 
     @Override
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    public List<User> getAllUsers() {
+        return users;
+    }
+
+    @Override
+    public User updateUser(Long id, User updatedUser) {
+        Optional<User> existing = getUserById(id);
+        if (existing.isPresent()) {
+            User u = existing.get();
+            u.setName(updatedUser.getName());
+            u.setEmail(updatedUser.getEmail());
+            u.setPassword(updatedUser.getPassword());
+            u.setRole(updatedUser.getRole());
+            return u;
+        }
+        return null; // Or throw exception
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        users.removeIf(u -> u.getId().equals(id));
     }
 }

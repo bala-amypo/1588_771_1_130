@@ -5,10 +5,9 @@ import com.example.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService service;
@@ -17,37 +16,35 @@ public class UserController {
         this.service = service;
     }
 
-
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User createUser(@RequestBody User user) {
         return service.createUser(user);
     }
 
- 
     @GetMapping("/{id}")
-    public Optional<User> getById(@PathVariable Long id) {
-        return service.getUserById(id);
+    public User getUserById(@PathVariable Long id) {
+        return service.getUserById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @GetMapping("/email/{email}")
-    public Optional<User> getByEmail(@PathVariable String email) {
-        return service.getUserByEmail(email);
+    public User getUserByEmail(@PathVariable String email) {
+        return service.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @GetMapping
-    public List<User> getAll() {
+    public List<User> getAllUsers() {
         return service.getAllUsers();
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Long id,
-                       @RequestBody User user) {
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return service.updateUser(id, user);
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public void deleteUser(@PathVariable Long id) {
         service.deleteUser(id);
-        return "User deleted successfully";
     }
 }
