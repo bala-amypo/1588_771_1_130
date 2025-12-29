@@ -1,45 +1,77 @@
 package com.example.demo.security;
 
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
 import java.util.*;
 
+@Component
 public class JwtTokenProvider {
 
-    /*
-     * Token format:
-     * UUID | userId | email | role1,role2
-     */
+    // 🔐 secret key (must be long)
+    private static final String SECRET =
+            "myjwtsecretkeymyjwtsecretkeymyjwtsecretkey12345";
 
+    private final SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes());
+
+    // ✅ CREATE JWT
     public String createToken(Long userId, String email, Set<String> roles) {
-        String rolePart = (roles == null || roles.isEmpty())
-                ? ""
-                : String.join(",", roles);
 
-        return UUID.randomUUID() + "|" + userId + "|" + email + "|" + rolePart;
+        return Jwts.builder()
+                .setSubject(email)
+                .claim("userId", userId)
+                .claim("roles", roles)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000)) // 1 day
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
+    // ✅ VALIDATE JWT
     public boolean validateToken(String token) {
-        if (token == null) return false;
-
-        String[] parts = token.split("\\|");
-        return parts.length == 4;
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
+    // ✅ GET EMAIL
     public String getEmail(String token) {
-        if (!validateToken(token)) return null;
-        return token.split("\\|")[2];
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
+    // ✅ GET ROLES
+    @SuppressWarnings("unchecked")
     public Set<String> getRoles(String token) {
-        if (!validateToken(token)) return Set.of();
+        List<String> roles = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("roles", List.class);
 
-        String rolePart = token.split("\\|")[3];
-        if (rolePart.isBlank()) return Set.of();
-
-        return new HashSet<>(Arrays.asList(rolePart.split(",")));
+        return new HashSet<>(roles);
     }
 
+    // ✅ GET USER ID
     public Long getUserId(String token) {
-        if (!validateToken(token)) return null;
-        return Long.parseLong(token.split("\\|")[1]);
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId", Long.class);
     }
 }
