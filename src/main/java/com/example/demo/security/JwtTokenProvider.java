@@ -4,23 +4,42 @@ import java.util.*;
 
 public class JwtTokenProvider {
 
+    /*
+     * Token format:
+     * UUID | userId | email | role1,role2
+     */
+
     public String createToken(Long userId, String email, Set<String> roles) {
-        return UUID.randomUUID() + "|" + userId + "|" + email;
+        String rolePart = (roles == null || roles.isEmpty())
+                ? ""
+                : String.join(",", roles);
+
+        return UUID.randomUUID() + "|" + userId + "|" + email + "|" + rolePart;
     }
 
     public boolean validateToken(String token) {
-        return token != null && token.contains("|");
+        if (token == null) return false;
+
+        String[] parts = token.split("\\|");
+        return parts.length == 4;
     }
 
     public String getEmail(String token) {
+        if (!validateToken(token)) return null;
         return token.split("\\|")[2];
     }
 
     public Set<String> getRoles(String token) {
-        return Set.of("ADMIN");
+        if (!validateToken(token)) return Set.of();
+
+        String rolePart = token.split("\\|")[3];
+        if (rolePart.isBlank()) return Set.of();
+
+        return new HashSet<>(Arrays.asList(rolePart.split(",")));
     }
 
     public Long getUserId(String token) {
+        if (!validateToken(token)) return null;
         return Long.parseLong(token.split("\\|")[1]);
     }
 }
