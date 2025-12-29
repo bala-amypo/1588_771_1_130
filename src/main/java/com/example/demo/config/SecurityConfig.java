@@ -20,38 +20,30 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-            // REST API → no CSRF
-            .csrf(csrf -> csrf.disable())
+    http
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
 
-            // Stateless JWT authentication
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+            // ✅ allow both paths (safe)
+            .requestMatchers(
+                "/auth/**",
+                "/api/auth/**",
+                "/swagger-ui/**",
+                "/v3/api-docs/**"
+            ).permitAll()
 
-            .authorizeHttpRequests(auth -> auth
-                // 🔓 Public endpoints
-                .requestMatchers(
-                    "/auth/**",
-                    "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/health"
-                ).permitAll()
+            // 🔐 everything else protected
+            .anyRequest().authenticated()
+        )
+        .addFilterBefore(
+            jwtAuthenticationFilter,
+            UsernamePasswordAuthenticationFilter.class
+        );
 
-                // 🔐 Everything else secured
-                .anyRequest().authenticated()
-            )
-
-            // JWT filter
-            .addFilterBefore(
-                jwtAuthenticationFilter,
-                UsernamePasswordAuthenticationFilter.class
-            );
-
-        return http.build();
-    }
+    return http.build();
+}
 
     // Required by AuthController
     @Bean
