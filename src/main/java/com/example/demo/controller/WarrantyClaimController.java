@@ -22,7 +22,7 @@ public class WarrantyClaimController {
     // Create a new warranty claim
     @PostMapping
     public ResponseEntity<AuthResponse> createWarrantyClaim(
-            @RequestBody WarrantyClaimRequest request) {
+            @RequestBody AuthRequest request) {
         AuthResponse response = service.createWarrantyClaim(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -45,7 +45,7 @@ public class WarrantyClaimController {
     @PutMapping("/{id}")
     public ResponseEntity<AuthResponse> updateWarrantyClaim(
             @PathVariable Long id,
-            @RequestBody WarrantyClaimRequest request) {
+            @RequestBody AuthRequest request) {
         AuthResponse response = service.updateWarrantyClaim(id, request);
         return ResponseEntity.ok(response);
     }
