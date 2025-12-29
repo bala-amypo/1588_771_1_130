@@ -3,10 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.model.WarrantyClaimRecord;
 import com.example.demo.service.WarrantyClaimService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/claims")
@@ -19,12 +19,14 @@ public class WarrantyClaimController {
         this.service = service;
     }
 
+    // Submit a warranty claim
     @PostMapping
     public WarrantyClaimRecord submitClaim(
             @RequestBody WarrantyClaimRecord claim) {
         return service.submitClaim(claim);
     }
 
+    // Update claim status (ADMIN only)
     @PutMapping("/{id}/status")
     public WarrantyClaimRecord updateStatus(
             @PathVariable Long id,
@@ -32,19 +34,24 @@ public class WarrantyClaimController {
         return service.updateClaimStatus(id, status);
     }
 
+    // Get claims by device serial number
     @GetMapping("/serial/{serialNumber}")
     public List<WarrantyClaimRecord> getBySerial(
             @PathVariable String serialNumber) {
         return service.getClaimsBySerial(serialNumber);
     }
 
-   
+    // Get claim by ID
     @GetMapping("/{id}")
-    public Optional<WarrantyClaimRecord> getById(
+    public ResponseEntity<WarrantyClaimRecord> getById(
             @PathVariable Long id) {
-        return service.getClaimById(id);
+
+        return service.getClaimById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
+    // Get all claims
     @GetMapping
     public List<WarrantyClaimRecord> getAll() {
         return service.getAllClaims();
