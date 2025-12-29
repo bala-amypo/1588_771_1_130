@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.WarrantyClaimRequest;
-import com.example.demo.dto.WarrantyClaimResponse;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
 import com.example.demo.service.impl.WarrantyClaimServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,32 +21,32 @@ public class WarrantyClaimController {
 
     // Create a new warranty claim
     @PostMapping
-    public ResponseEntity<WarrantyClaimResponse> createWarrantyClaim(
+    public ResponseEntity<AuthResponse> createWarrantyClaim(
             @RequestBody WarrantyClaimRequest request) {
-        WarrantyClaimResponse response = service.createWarrantyClaim(request);
+        AuthResponse response = service.createWarrantyClaim(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // Get all warranty claims
     @GetMapping
-    public ResponseEntity<List<WarrantyClaimResponse>> getAllWarrantyClaims() {
-        List<WarrantyClaimResponse> claims = service.getAllWarrantyClaims();
+    public ResponseEntity<List<AuthResponse>> getAllWarrantyClaims() {
+        List<AuthResponse> claims = service.getAllWarrantyClaims();
         return ResponseEntity.ok(claims);
     }
 
     // Get a warranty claim by ID
     @GetMapping("/{id}")
-    public ResponseEntity<WarrantyClaimResponse> getWarrantyClaimById(@PathVariable Long id) {
-        WarrantyClaimResponse response = service.getWarrantyClaimById(id);
+    public ResponseEntity<AuthResponse> getWarrantyClaimById(@PathVariable Long id) {
+        AuthResponse response = service.getWarrantyClaimById(id);
         return ResponseEntity.ok(response);
     }
 
     // Update a warranty claim
     @PutMapping("/{id}")
-    public ResponseEntity<WarrantyClaimResponse> updateWarrantyClaim(
+    public ResponseEntity<AuthResponse> updateWarrantyClaim(
             @PathVariable Long id,
             @RequestBody WarrantyClaimRequest request) {
-        WarrantyClaimResponse response = service.updateWarrantyClaim(id, request);
+        AuthResponse response = service.updateWarrantyClaim(id, request);
         return ResponseEntity.ok(response);
     }
 
