@@ -1,31 +1,47 @@
 package com.example.demo.model;
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "warranty_claim_records")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class WarrantyClaimRecord {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String serialNumber;
+
+    @Column(nullable = false)
+    private String claimantName;
+
+    private String claimantEmail;
+
+    @Column(nullable = false)
     private String claimReason;
-    private String status;
-    private LocalDate warrantyExpiration;
 
-    // Constructor
-    public WarrantyClaimRecord() {}
+    @Column(nullable = false)
+    @Builder.Default
+    private String status = "PENDING"; // PENDING / APPROVED / REJECTED / FLAGGED
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    private LocalDateTime submittedAt;
 
-    public String getSerialNumber() { return serialNumber; }
-    public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
+    private LocalDateTime createdAt;
 
-    public String getClaimReason() { return claimReason; }
-    public void setClaimReason(String claimReason) { this.claimReason = claimReason; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
-    public LocalDate getWarrantyExpiration() { return warrantyExpiration; }
-    public void setWarrantyExpiration(LocalDate warrantyExpiration) { this.warrantyExpiration = warrantyExpiration; }
+    @PrePersist
+    public void onCreate() {
+        if (status == null) {
+            status = "PENDING";
+        }
+        this.submittedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+    }
 }
