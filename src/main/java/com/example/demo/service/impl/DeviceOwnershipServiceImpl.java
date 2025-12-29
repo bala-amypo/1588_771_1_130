@@ -3,38 +3,40 @@ package com.example.demo.service.impl;
 import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.repository.DeviceOwnershipRecordRepository;
 import com.example.demo.service.DeviceOwnershipService;
-import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
-@Service
-public class DeviceOwnershipServiceImpl implements DeviceOwnershipService {
-    private final DeviceOwnershipRecordRepository repository;
-    
-    public DeviceOwnershipServiceImpl(DeviceOwnershipRecordRepository repository) {
-        this.repository = repository;
+public class DeviceOwnershipServiceImpl
+        implements DeviceOwnershipService {
+
+    private final DeviceOwnershipRecordRepository repo;
+
+    public DeviceOwnershipServiceImpl(DeviceOwnershipRecordRepository repo) {
+        this.repo = repo;
     }
-    
-    public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord device) {
-        if (repository.existsBySerialNumber(device.getSerialNumber())) {
-            throw new IllegalArgumentException("Device already exists");
+
+    @Override
+    public DeviceOwnershipRecord registerDevice(DeviceOwnershipRecord record) {
+        if (repo.existsBySerialNumber(record.getSerialNumber())) {
+            throw new IllegalArgumentException("Duplicate serial");
         }
-        return repository.save(device);
+        return repo.save(record);
     }
-    
+
+    @Override
+    public DeviceOwnershipRecord updateDeviceStatus(Long id, boolean active) {
+        DeviceOwnershipRecord record = repo.findById(id).orElseThrow();
+        record.setActive(active);
+        return repo.save(record);
+    }
+
+    @Override
     public Optional<DeviceOwnershipRecord> getBySerial(String serialNumber) {
-        return repository.findBySerialNumber(serialNumber);
+        return repo.findBySerialNumber(serialNumber);
     }
-    
+
+    @Override
     public List<DeviceOwnershipRecord> getAllDevices() {
-        return repository.findAll();
-    }
-    
-    public DeviceOwnershipRecord updateDeviceStatus(Long id, Boolean active) {
-        DeviceOwnershipRecord device = repository.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("Device not found"));
-        device.setActive(active);
-        return repository.save(device);
+        return repo.findAll();
     }
 }
