@@ -1,14 +1,14 @@
-package com.example.demo.exception;
+// package com.example.demo.exception;
 
-public class ApiError {
+// public class ApiError {
 
-    private String message;
+//     private String message;
 
-    public ApiError(String message) {
-        this.message = message;
-    }
+//     public ApiError(String message) {
+//         this.message = message;
+//     }
 
-    public String getMessage() {
-        return message;
-    }
-}
+//     public String getMessage() {
+//         return message;
+//     }
+// }
