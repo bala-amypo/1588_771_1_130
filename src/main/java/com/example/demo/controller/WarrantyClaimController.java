@@ -1,59 +1,52 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.service.impl.WarrantyClaimServiceImpl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.example.demo.model.WarrantyClaimRecord;
+import com.example.demo.service.WarrantyClaimService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/warranty-claims")
+@RequestMapping("/api/claims")
+@Tag(name = "Warranty Claims")
 public class WarrantyClaimController {
 
-    private final WarrantyClaimServiceImpl service;
+    private final WarrantyClaimService service;
 
-    public WarrantyClaimController(WarrantyClaimServiceImpl service) {
+    public WarrantyClaimController(WarrantyClaimService service) {
         this.service = service;
     }
 
-    // Create a new warranty claim
     @PostMapping
-    public ResponseEntity<AuthResponse> createWarrantyClaim(
-            @RequestBody AuthRequest request) {
-        AuthResponse response = service.createWarrantyClaim(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public WarrantyClaimRecord submitClaim(
+            @RequestBody WarrantyClaimRecord claim) {
+        return service.submitClaim(claim);
     }
 
-    // Get all warranty claims
-    @GetMapping
-    public ResponseEntity<List<AuthResponse>> getAllWarrantyClaims() {
-        List<AuthResponse> claims = service.getAllWarrantyClaims();
-        return ResponseEntity.ok(claims);
-    }
-
-    // Get a warranty claim by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<AuthResponse> getWarrantyClaimById(@PathVariable Long id) {
-        AuthResponse response = service.getWarrantyClaimById(id);
-        return ResponseEntity.ok(response);
-    }
-
-    // Update a warranty claim
-    @PutMapping("/{id}")
-    public ResponseEntity<AuthResponse> updateWarrantyClaim(
+    @PutMapping("/{id}/status")
+    public WarrantyClaimRecord updateStatus(
             @PathVariable Long id,
-            @RequestBody AuthRequest request) {
-        AuthResponse response = service.updateWarrantyClaim(id, request);
-        return ResponseEntity.ok(response);
+            @RequestParam String status) {
+        return service.updateClaimStatus(id, status);
     }
 
-    // Delete a warranty claim
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWarrantyClaim(@PathVariable Long id) {
-        service.deleteWarrantyClaim(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/serial/{serialNumber}")
+    public List<WarrantyClaimRecord> getBySerial(
+            @PathVariable String serialNumber) {
+        return service.getClaimsBySerial(serialNumber);
+    }
+
+   
+    @GetMapping("/{id}")
+    public Optional<WarrantyClaimRecord> getById(
+            @PathVariable Long id) {
+        return service.getClaimById(id);
+    }
+
+    @GetMapping
+    public List<WarrantyClaimRecord> getAll() {
+        return service.getAllClaims();
     }
 }

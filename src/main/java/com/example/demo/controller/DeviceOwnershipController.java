@@ -1,59 +1,56 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.service.impl.DeviceOwnershipServiceImpl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.example.demo.model.DeviceOwnershipRecord;
+import com.example.demo.service.DeviceOwnershipService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/device-ownership")
+@RequestMapping("/api/devices")
+@Tag(name = "Device Ownership")
 public class DeviceOwnershipController {
 
-    private final DeviceOwnershipServiceImpl service;
+    private final DeviceOwnershipService service;
 
-    public DeviceOwnershipController(DeviceOwnershipServiceImpl service) {
+    public DeviceOwnershipController(DeviceOwnershipService service) {
         this.service = service;
     }
 
-    // Create a new device ownership record
     @PostMapping
-    public ResponseEntity<AuthResponse> createDeviceOwnership(
-            @RequestBody AuthRequest request) {
-        DeviceOwnershipResponse response = service.createDeviceOwnership(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public DeviceOwnershipRecord registerDevice(
+            @RequestBody DeviceOwnershipRecord record) {
+        return service.registerDevice(record);
     }
 
-    // Get all device ownership records
-    @GetMapping
-    public ResponseEntity<List<AuthResponse>> getAllDeviceOwnerships() {
-        List<AuthResponse> responseList = service.getAllDeviceOwnerships();
-        return ResponseEntity.ok(responseList);
-    }
-
-    // Get a device ownership record by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<AuthResponse> getDeviceOwnershipById(@PathVariable Long id) {
-        AuthResponse response = service.getDeviceOwnershipById(id);
-        return ResponseEntity.ok(response);
-    }
-
-    // Update a device ownership record
-    @PutMapping("/{id}")
-    public ResponseEntity<AuthResponse> updateDeviceOwnership(
+    @PutMapping("/{id}/status")
+    public DeviceOwnershipRecord updateStatus(
             @PathVariable Long id,
-            @RequestBody AuthRequest request) {
-        AuthResponse response = service.updateDeviceOwnership(id, request);
-        return ResponseEntity.ok(response);
+            @RequestParam boolean active) {
+        return service.updateDeviceStatus(id, active);
     }
 
-    // Delete a device ownership record
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDeviceOwnership(@PathVariable Long id) {
-        service.deleteDeviceOwnership(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/serial/{serialNumber}")
+    public Optional<DeviceOwnershipRecord> getBySerial(
+            @PathVariable String serialNumber) {
+        return service.getBySerial(serialNumber);
+    }
+
+
+    @GetMapping("/{id}")
+    public Optional<DeviceOwnershipRecord> getById(
+            @PathVariable Long id) {
+        return service.getAllDevices()
+                .stream()
+                .filter(d -> id.equals(d.getId()))
+                .findFirst();
+    }
+
+
+    @GetMapping
+    public List<DeviceOwnershipRecord> getAll() {
+        return service.getAllDevices();
     }
 }
