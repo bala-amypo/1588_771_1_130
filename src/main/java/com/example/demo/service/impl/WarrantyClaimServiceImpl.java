@@ -1,13 +1,20 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
+import com.example.demo.model.DeviceOwnershipRecord;
+import com.example.demo.model.WarrantyClaimRecord;
+import com.example.demo.repository.DeviceOwnershipRecordRepository;
+import com.example.demo.repository.FraudAlertRecordRepository;
+import com.example.demo.repository.FraudRuleRepository;
+import com.example.demo.repository.StolenDeviceReportRepository;
+import com.example.demo.repository.WarrantyClaimRecordRepository;
 import com.example.demo.service.WarrantyClaimService;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class WarrantyClaimServiceImpl
         implements WarrantyClaimService {
 
@@ -33,15 +40,27 @@ public class WarrantyClaimServiceImpl
 
     @Override
     public WarrantyClaimRecord submitClaim(WarrantyClaimRecord claim) {
+
         DeviceOwnershipRecord device =
-                deviceRepo.findBySerialNumber(claim.getSerialNumber()).orElseThrow();
+                deviceRepo.findBySerialNumber(claim.getSerialNumber())
+                        .orElseThrow(() ->
+                                new java.util.NoSuchElementException("Device not found"));
 
-        if (claimRepo.existsBySerialNumberAndClaimReason(
-                claim.getSerialNumber(), claim.getClaimReason())
-                || device.getWarrantyExpiration().isBefore(LocalDate.now())
-                || stolenRepo.existsBySerialNumber(claim.getSerialNumber())) {
+        boolean duplicate =
+                claimRepo.existsBySerialNumberAndClaimReason(
+                        claim.getSerialNumber(),
+                        claim.getClaimReason());
 
+        boolean expired =
+                device.getWarrantyExpiration().isBefore(LocalDate.now());
+
+        boolean stolen =
+                stolenRepo.existsBySerialNumber(claim.getSerialNumber());
+
+        if (duplicate || expired || stolen) {
             claim.setStatus("FLAGGED");
+        } else {
+            claim.setStatus("PENDING");
         }
 
         return claimRepo.save(claim);
@@ -49,7 +68,12 @@ public class WarrantyClaimServiceImpl
 
     @Override
     public WarrantyClaimRecord updateClaimStatus(Long id, String status) {
-        WarrantyClaimRecord claim = claimRepo.findById(id).orElseThrow();
+
+        WarrantyClaimRecord claim =
+                claimRepo.findById(id)
+                        .orElseThrow(() ->
+                                new java.util.NoSuchElementException("Claim not found"));
+
         claim.setStatus(status);
         return claimRepo.save(claim);
     }

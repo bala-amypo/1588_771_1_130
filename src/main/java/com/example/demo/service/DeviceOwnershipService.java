@@ -13,5 +13,7 @@ public interface DeviceOwnershipService {
 
     Optional<DeviceOwnershipRecord> getBySerial(String serialNumber);
 
+    Optional<DeviceOwnershipRecord> getById(Long id);
+
     List<DeviceOwnershipRecord> getAllDevices();
 }
