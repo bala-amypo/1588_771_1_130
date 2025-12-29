@@ -3,10 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.model.DeviceOwnershipRecord;
 import com.example.demo.service.DeviceOwnershipService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/devices")
@@ -19,12 +19,14 @@ public class DeviceOwnershipController {
         this.service = service;
     }
 
+    // Register a new device
     @PostMapping
     public DeviceOwnershipRecord registerDevice(
             @RequestBody DeviceOwnershipRecord record) {
         return service.registerDevice(record);
     }
 
+    // Activate / Deactivate device
     @PutMapping("/{id}/status")
     public DeviceOwnershipRecord updateStatus(
             @PathVariable Long id,
@@ -32,23 +34,27 @@ public class DeviceOwnershipController {
         return service.updateDeviceStatus(id, active);
     }
 
+    // Get device by serial number
     @GetMapping("/serial/{serialNumber}")
-    public Optional<DeviceOwnershipRecord> getBySerial(
+    public ResponseEntity<DeviceOwnershipRecord> getBySerial(
             @PathVariable String serialNumber) {
-        return service.getBySerial(serialNumber);
+
+        return service.getBySerial(serialNumber)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-
+    // Get device by ID
     @GetMapping("/{id}")
-    public Optional<DeviceOwnershipRecord> getById(
+    public ResponseEntity<DeviceOwnershipRecord> getById(
             @PathVariable Long id) {
-        return service.getAllDevices()
-                .stream()
-                .filter(d -> id.equals(d.getId()))
-                .findFirst();
+
+        return service.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-
+    // Get all devices
     @GetMapping
     public List<DeviceOwnershipRecord> getAll() {
         return service.getAllDevices();
