@@ -1,70 +1,54 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-    private final Map<Long, User> usersById = new HashMap<>();
-    private final Map<String, User> usersByEmail = new HashMap<>();
-    private final AtomicLong idGen = new AtomicLong(1);
-
+    
+    private final UserRepository userRepository;
+    
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+    
     @Override
     public User createUser(User user) {
-        if (usersByEmail.containsKey(user.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
-        }
-
-        user.setId(idGen.getAndIncrement());
-
-        // ensure roles not null
-        if (user.getRoles() == null) {
-            user.setRoles(Set.of("USER"));
-        }
-
-        usersById.put(user.getId(), user);
-        usersByEmail.put(user.getEmail(), user);
-        return user;
+        return userRepository.save(user);
     }
-
+    
     @Override
     public Optional<User> getUserById(Long id) {
-        return Optional.ofNullable(usersById.get(id));
+        return userRepository.findById(id);
     }
-
+    
     @Override
     public Optional<User> getUserByEmail(String email) {
-        return Optional.ofNullable(usersByEmail.get(email));
+        return userRepository.findByEmail(email);
     }
-
+    
     @Override
     public List<User> getAllUsers() {
-        return new ArrayList<>(usersById.values());
+        return userRepository.findAll();
     }
-
+    
     @Override
-    public User updateUser(Long id, User user) {
-        User existing = usersById.get(id);
-        if (existing == null) {
-            throw new NoSuchElementException("User not found");
-        }
-
-        user.setId(id);
-        usersById.put(id, user);
-        usersByEmail.put(user.getEmail(), user);
-        return user;
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
-
+    
     @Override
     public void deleteUser(Long id) {
-        User removed = usersById.remove(id);
-        if (removed != null) {
-            usersByEmail.remove(removed.getEmail());
-        }
+        userRepository.deleteById(id);
+    }
+    
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
