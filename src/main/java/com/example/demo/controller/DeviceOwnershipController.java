@@ -5,13 +5,14 @@ import com.example.demo.service.DeviceOwnershipService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/devices")
 @Tag(name = "Device Ownership")
-@SecurityRequirement(name=
+@SecurityRequirement(name="bearerAuth")
 public class DeviceOwnershipController {
 
     private final DeviceOwnershipService service;

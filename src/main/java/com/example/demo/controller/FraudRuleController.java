@@ -5,12 +5,14 @@ import com.example.demo.service.FraudRuleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/fraud-rules")
 @Tag(name = "Fraud Rules")
+@SecurityRequirement(name="bearerAuth")
 public class FraudRuleController {
 
     private final FraudRuleService service;
