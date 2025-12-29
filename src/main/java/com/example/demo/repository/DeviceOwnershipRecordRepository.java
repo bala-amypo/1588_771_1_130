@@ -1,12 +1,10 @@
 package com.example.demo.repository;
+
 import com.example.demo.model.DeviceOwnershipRecord;
-import org.springframework.stereotype.Repository;
-import java.util.*;
-@Repository
-public interface DeviceOwnershipRecordRepository {
-    boolean existsBySerialNumber(String serialNumber);
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
+public interface DeviceOwnershipRecordRepository extends JpaRepository<DeviceOwnershipRecord, Long> {
     Optional<DeviceOwnershipRecord> findBySerialNumber(String serialNumber);
-    Optional<DeviceOwnershipRecord> findById(Long id);
-    List<DeviceOwnershipRecord> findAll();
-    DeviceOwnershipRecord save(DeviceOwnershipRecord record);
+    boolean existsBySerialNumber(String serialNumber);
 }
