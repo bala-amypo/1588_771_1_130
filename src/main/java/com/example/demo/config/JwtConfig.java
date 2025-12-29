@@ -1,15 +1,15 @@
-package com.example.demo.config;
+// package com.example.demo.config;
 
-import com.example.demo.security.JwtTokenProvider;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+// import com.example.demo.security.JwtTokenProvider;
+// import org.springframework.context.annotation.Bean;
+// import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class JwtConfig {
+// @Configuration
+// public class JwtConfig {
 
-    @Bean
-    public JwtTokenProvider jwtTokenProvider() {
-        return new JwtTokenProvider();
-    }
-}
+//     @Bean
+//     public JwtTokenProvider jwtTokenProvider() {
+//         return new JwtTokenProvider();
+//     }
+// }
 
