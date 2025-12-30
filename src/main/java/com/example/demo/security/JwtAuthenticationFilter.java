@@ -17,9 +17,18 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private CustomUserDetailsService userDetailsService;
 
+    // ✅ Constructor used by Spring Boot
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    // ✅ Constructor used by TestNG tests
+    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider,
+                                   CustomUserDetailsService userDetailsService) {
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -42,14 +51,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(
                                 email,
                                 null,
-                                List.of()   // roles optional for now
+                                List.of()
                         );
 
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext()
+                        .setAuthentication(authentication);
             }
         }
 
